@@ -24,6 +24,8 @@ public interface IYtmsUserService {
 
     Boolean approvePendingUser(String emailAdd);
 
+    Boolean declinePendingUser(String emailAdd);
+
     ResponseWrapperDto forgotPassword(String email);
 
     Boolean resetPassword(Map<String, String> map);

@@ -46,6 +46,13 @@ public class UsersController {
         return new ResponseEntity<>(status, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_TECHNICAL_MANAGER')")
+    @PostMapping("/decline")
+    public ResponseEntity<Boolean> declinePendingUser(@RequestParam String emailAdd) {
+        Boolean status = this.userService.declinePendingUser(emailAdd);
+        return new ResponseEntity<>(status, HttpStatus.OK);
+    }
+
     @PutMapping("/forgotPassword")
     public ResponseEntity<ResponseWrapperDto> forgotPassword(@RequestParam String email) {
         return new ResponseEntity<>(userService.forgotPassword(email), HttpStatus.OK);

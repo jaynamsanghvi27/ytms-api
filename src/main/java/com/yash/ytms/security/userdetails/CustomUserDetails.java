@@ -1,5 +1,6 @@
 package com.yash.ytms.security.userdetails;
 
+import com.yash.ytms.constants.UserAccountStatusTypes;
 import com.yash.ytms.domain.YtmsUser;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,7 +27,7 @@ public class CustomUserDetails implements UserDetails {
 
     private String password;
 
-    private String isApproved;
+    private UserAccountStatusTypes accountStatus;
 
     private GrantedAuthority grantedAuthorities;
 
@@ -34,7 +35,7 @@ public class CustomUserDetails implements UserDetails {
         this.fullName = users.getFullName();
         this.emailAdd = users.getEmailAdd();
         this.password = users.getPassword();
-        this.isApproved = users.getIsApproved();
+        this.accountStatus = users.getAccountStatus();
         this.grantedAuthorities = new SimpleGrantedAuthority(users.getUserRole().getRoleTypes());
     }
 
