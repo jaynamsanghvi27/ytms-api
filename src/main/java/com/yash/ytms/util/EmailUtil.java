@@ -7,6 +7,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
+import java.util.Base64;
+
 /**
  * Project Name - ytms-api
  * <p>
@@ -28,9 +30,9 @@ public class EmailUtil {
         mimeMessageHelper.setSubject("SetPassword");
         mimeMessageHelper.setText("""
                 	        
-                 <a href="http://localhost:8080/set-password?email=%s">click here to reset password</a>
+                 <a href="http://localhost:4200/reset-password?email=%s">click here to reset password</a>
                 	        
-                """.formatted(email), true);
+                """.formatted(Base64.getEncoder().encodeToString(email.getBytes())), true);
 
         javaMailSender.send(mimeMessage);
     }

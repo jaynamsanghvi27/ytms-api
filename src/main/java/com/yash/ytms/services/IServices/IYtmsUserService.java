@@ -4,6 +4,7 @@ import com.yash.ytms.dto.ResponseWrapperDto;
 import com.yash.ytms.dto.YtmsUserDto;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Project Name - ytms-api
@@ -24,4 +25,6 @@ public interface IYtmsUserService {
     Boolean approvePendingUser(String emailAdd);
 
     ResponseWrapperDto forgotPassword(String email);
+
+    Boolean resetPassword(Map<String, String> map);
 }

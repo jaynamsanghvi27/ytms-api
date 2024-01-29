@@ -19,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Project Name - ytms-api
@@ -157,5 +159,20 @@ public class YtmsUserServiceImpl implements IYtmsUserService {
 
         }
         return responseWrapperDto;
+    }
+
+    @Override
+    public Boolean resetPassword(Map<String, String> map) {
+        String email = map.get("email");
+        String password = map.get("password");
+        String newEmail = new String(Base64.getDecoder().decode(email));
+        YtmsUser user = this.userRepository.getUserByEmail(newEmail);
+        if (user != null && StringUtils.isNotEmpty(password)) {
+            user.setPassword(this.passwordEncoder.encode(password));
+            System.out.println(" changing password for " + user.toString());
+            this.userRepository.save(user);
+            return true;
+        }
+        return false;
     }
 }

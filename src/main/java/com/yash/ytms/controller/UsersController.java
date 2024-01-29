@@ -10,11 +10,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Project Name - ytms-api
@@ -47,5 +49,10 @@ public class UsersController {
     @PutMapping("/forgotPassword")
     public ResponseEntity<ResponseWrapperDto> forgotPassword(@RequestParam String email) {
         return new ResponseEntity<>(userService.forgotPassword(email), HttpStatus.OK);
+    }
+
+    @PostMapping("/resetPassword")
+    public Boolean resetPassword(@RequestBody Map<String, String> map) {
+        return this.userService.resetPassword(map);
     }
 }

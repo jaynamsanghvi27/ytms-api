@@ -99,6 +99,7 @@ public class SecurityConfig {
                     auth.requestMatchers("/register/**").permitAll()
                             .requestMatchers("/login/**").permitAll()
                             .requestMatchers("/users/forgotPassword").permitAll()
+                            .requestMatchers("/users/resetPassword").permitAll()
                             .anyRequest().authenticated();
                 })
                 .exceptionHandling(e -> e.authenticationEntryPoint(this.authenticationEntryPoint))
