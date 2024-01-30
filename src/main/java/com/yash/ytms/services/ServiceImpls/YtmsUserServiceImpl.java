@@ -1,6 +1,7 @@
 package com.yash.ytms.services.ServiceImpls;
 
-import com.yash.ytms.constants.StatusTypes;
+import com.yash.ytms.constants.RequestStatusTypes;
+import com.yash.ytms.constants.UserAccountStatusTypes;
 import com.yash.ytms.constants.UserRoleTypes;
 import com.yash.ytms.domain.YtmsUser;
 import com.yash.ytms.dto.ResponseWrapperDto;
@@ -77,7 +78,7 @@ public class YtmsUserServiceImpl implements IYtmsUserService {
                             .map(userDto, YtmsUser.class);
 
                     user.setPassword(this.passwordEncoder.encode(userDto.getPassword()));
-                    user.setIsApproved("PENDING");
+                    user.setAccountStatus(UserAccountStatusTypes.PENDING);
 
                     //reassigned with the new created data
                     user = this
@@ -138,6 +139,19 @@ public class YtmsUserServiceImpl implements IYtmsUserService {
     }
 
     @Override
+    public Boolean declinePendingUser(String emailAdd) {
+        if (StringUtils.isNotEmpty(emailAdd)) {
+            Integer status = this.userRepository.declinePendingUser(emailAdd);
+            if (status == 1)
+                return true;
+            else
+                throw new ApplicationException("Failed while declining user account");
+        } else {
+            throw new ApplicationException("Email address is empty.");
+        }
+    }
+
+    @Override
     public ResponseWrapperDto forgotPassword(String email) {
         ResponseWrapperDto responseWrapperDto = new ResponseWrapperDto();
         if (StringUtils.isNotEmpty(email)) {
@@ -146,20 +160,20 @@ public class YtmsUserServiceImpl implements IYtmsUserService {
                 if (ObjectUtils.isNotEmpty(ytmsUser)) {
                     emailUtil.sendSetPasswordEmail(email);
                     responseWrapperDto.setMessage("please check your email to reset password");
-                    responseWrapperDto.setStatus(StatusTypes.SUCCESS.toString());
+                    responseWrapperDto.setStatus(RequestStatusTypes.SUCCESS.toString());
                 } else {
                     responseWrapperDto.setMessage("User does not exist with the provided email !");
-                    responseWrapperDto.setStatus(StatusTypes.FAILED.toString());
+                    responseWrapperDto.setStatus(RequestStatusTypes.FAILED.toString());
                 }
 
             } catch (MessagingException e) {
                 responseWrapperDto.setMessage("unable to set password !");
-                responseWrapperDto.setStatus(StatusTypes.FAILED.toString());
+                responseWrapperDto.setStatus(RequestStatusTypes.FAILED.toString());
             }
 
         } else {
             responseWrapperDto.setMessage("Email is empty !");
-            responseWrapperDto.setStatus(StatusTypes.FAILED.toString());
+            responseWrapperDto.setStatus(RequestStatusTypes.FAILED.toString());
 
         }
         return responseWrapperDto;

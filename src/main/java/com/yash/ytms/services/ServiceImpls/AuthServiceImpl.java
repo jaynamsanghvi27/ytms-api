@@ -1,6 +1,8 @@
 package com.yash.ytms.services.ServiceImpls;
 
-import com.yash.ytms.constants.StatusTypes;
+import com.yash.ytms.constants.AppConstants;
+import com.yash.ytms.constants.RequestStatusTypes;
+import com.yash.ytms.constants.UserAccountStatusTypes;
 import com.yash.ytms.exception.ApplicationException;
 import com.yash.ytms.security.jwt.JwtAuthRequest;
 import com.yash.ytms.security.jwt.JwtAuthResponse;
@@ -8,7 +10,6 @@ import com.yash.ytms.security.jwt.JwtTokenHelper;
 import com.yash.ytms.security.userdetails.CustomUserDetails;
 import com.yash.ytms.security.userdetails.CustomUserDetailsServiceImpl;
 import com.yash.ytms.services.IServices.IAuthService;
-import com.yash.ytms.services.IServices.IYtmsUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.internal.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +38,11 @@ public class AuthServiceImpl implements IAuthService {
     @Autowired
     private CustomUserDetailsServiceImpl userDetailsService;
 
-    @Autowired
-    private IYtmsUserService userService;
-
     @Override
     public JwtAuthResponse login(JwtAuthRequest authRequest) {
         String userName = authRequest.getEmail();
         String password = authRequest.getPassword();
+        String token = null;
 
         this.authenticate(userName, password);
 
@@ -53,17 +52,27 @@ public class AuthServiceImpl implements IAuthService {
 
         Assert.notNull(userDetails);
         JwtAuthResponse authResponse = new JwtAuthResponse();
-        if (StringUtils.equalsIgnoreCase(userDetails.getIsApproved(), "approved")) {
-            String token = this
+
+        if (StringUtils.equalsIgnoreCase(userDetails.getAccountStatus().toString(),
+                UserAccountStatusTypes.APPROVED.toString())) {
+
+            token = this
                     .tokenHelper
                     .generateToken(userDetails);
 
             authResponse.setToken(token);
             authResponse.setMessage("Successfully Logged In");
-            authResponse.setStatus(StatusTypes.SUCCESS.toString());
-            return authResponse;
+            authResponse.setStatus(RequestStatusTypes.SUCCESS.toString());
+
+        } else if (StringUtils.equalsIgnoreCase(userDetails.getAccountStatus().toString(),
+                UserAccountStatusTypes.DECLINED.toString())) {
+
+            authResponse.setToken(null);
+            authResponse.setStatus(RequestStatusTypes.FAILED.toString());
+            authResponse.setMessage(AppConstants.DECLINED_USER_MESSAGE);
         } else {
-            authResponse.setStatus(StatusTypes.FAILED.toString());
+            authResponse.setToken(null);
+            authResponse.setStatus(RequestStatusTypes.FAILED.toString());
             authResponse.setMessage("Your request is in Pending state for Approval");
         }
         return authResponse;
