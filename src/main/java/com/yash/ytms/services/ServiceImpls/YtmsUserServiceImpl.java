@@ -195,8 +195,7 @@ public class YtmsUserServiceImpl implements IYtmsUserService {
     }
 
     @Override
-    public ResponseWrapperDto changePassword(Map<String, String> map) {
-        ResponseWrapperDto responseWrapperDto = new ResponseWrapperDto();
+    public Boolean changePassword(Map<String, String> map) {
         String password = map.get("password");
         String oldPassword = map.get("oldPassword");
 
@@ -210,19 +209,14 @@ public class YtmsUserServiceImpl implements IYtmsUserService {
             if (passwordEncoder.matches(oldPassword, user.getPassword())) {
                 user.setPassword(passwordEncoder.encode(password));
                 this.userRepository.save(user);
-                responseWrapperDto.setMessage("Password changed successfully");
-                responseWrapperDto.setStatus(StatusTypes.SUCCESS.toString());
-
+                return true;
             } else {
-                responseWrapperDto.setMessage("Old password doesn't match.");
-                responseWrapperDto.setStatus(StatusTypes.FAILED.toString());
+                System.out.println("Old password doesn't match.");
             }
         } else {
-            responseWrapperDto.setMessage("User not found or password is empty.");
-            responseWrapperDto.setStatus(StatusTypes.FAILED.toString());
-
+            System.out.println("User not found or password is empty.");
         }
 
-        return responseWrapperDto;
+        return false;
     }
 }
