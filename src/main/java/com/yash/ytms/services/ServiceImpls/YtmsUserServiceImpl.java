@@ -8,6 +8,7 @@ import com.yash.ytms.dto.UserRoleDto;
 import com.yash.ytms.dto.YtmsUserDto;
 import com.yash.ytms.exception.ApplicationException;
 import com.yash.ytms.repository.YtmsUserRepository;
+import com.yash.ytms.security.userdetails.CustomUserDetails;
 import com.yash.ytms.services.IServices.IUserRoleService;
 import com.yash.ytms.services.IServices.IYtmsUserService;
 import com.yash.ytms.util.EmailUtil;
@@ -16,9 +17,12 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -173,6 +177,32 @@ public class YtmsUserServiceImpl implements IYtmsUserService {
             this.userRepository.save(user);
             return true;
         }
+        return false;
+    }
+
+    @Override
+    public Boolean changePassword(Map<String, String> map) {
+        String password = map.get("password");
+        String oldPassword = map.get("oldPassword");
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        CustomUserDetails auth = (CustomUserDetails) securityContext.getAuthentication().getPrincipal();
+        String email = auth.getEmailAdd();
+
+        YtmsUser user = this.userRepository.getUserByEmail(email);
+
+        if (user != null && StringUtils.isNotEmpty(password) && StringUtils.isNotEmpty(oldPassword)) {
+            if (passwordEncoder.matches(oldPassword, user.getPassword())) {
+                user.setPassword(passwordEncoder.encode(password));
+                this.userRepository.save(user);
+                return true;
+            } else {
+                System.out.println("Old password doesn't match.");
+            }
+        } else {
+            System.out.println("User not found or password is empty.");
+        }
+
         return false;
     }
 }

@@ -55,4 +55,10 @@ public class UsersController {
     public Boolean resetPassword(@RequestBody Map<String, String> map) {
         return this.userService.resetPassword(map);
     }
+
+    @PostMapping("/changePassword")
+    public Boolean changePassword(@RequestBody Map<String, String> map) {
+        return this.userService.changePassword(map);
+    }
+
 }
