@@ -29,5 +29,4 @@ public interface IYtmsUserService {
     ResponseWrapperDto forgotPassword(String email);
 
     Boolean resetPassword(Map<String, String> map);
-    Boolean changePassword(Map<String, String> map);
 }
