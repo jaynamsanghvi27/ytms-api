@@ -57,7 +57,7 @@ public class UsersController {
     }
 
     @PostMapping("/changePassword")
-    public Boolean changePassword(@RequestBody Map<String, String> map) {
+    public ResponseWrapperDto changePassword(@RequestBody Map<String, String> map) {
         return this.userService.changePassword(map);
     }
 
