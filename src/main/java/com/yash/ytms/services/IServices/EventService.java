@@ -1,8 +1,9 @@
 package com.yash.ytms.services.IServices;
 
 import com.yash.ytms.domain.Event;
+import com.yash.ytms.domain.YtmsUser;
+import com.yash.ytms.dto.ResponseWrapperDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface EventService {
     ResponseEntity<Void> deleteEvent(Integer eventId);
 
     ResponseEntity<Event> updateEvent(Integer eventId, Event updatedEvent);
+    ResponseWrapperDto searchByTrainer(String trainer);
+    List<YtmsUser> getAllTrainers();
 }

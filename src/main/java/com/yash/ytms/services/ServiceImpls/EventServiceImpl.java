@@ -1,7 +1,12 @@
 package com.yash.ytms.services.ServiceImpls;
-
+import com.yash.ytms.constants.RequestStatusTypes;
+import com.yash.ytms.constants.UserRoleTypes;
 import com.yash.ytms.domain.Event;
+import com.yash.ytms.domain.UserRole;
+import com.yash.ytms.domain.YtmsUser;
+import com.yash.ytms.dto.ResponseWrapperDto;
 import com.yash.ytms.repository.EventRepository;
+import com.yash.ytms.repository.YtmsUserRepository;
 import com.yash.ytms.services.IServices.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,8 +18,11 @@ import java.util.Optional;
 
 @Service
 public class EventServiceImpl implements EventService {
+
     @Autowired
     private EventRepository eventRepository;
+    @Autowired
+    private YtmsUserRepository userRepo;
 
     @Override
     public ResponseEntity<List<Event>> getAllEvents() {
@@ -53,11 +61,32 @@ public class EventServiceImpl implements EventService {
             existingEvent.setTitle(updatedEvent.getTitle());
             existingEvent.setStart(updatedEvent.getStart());
             existingEvent.setEnd(updatedEvent.getEnd());
-
+            existingEvent.setColor(updatedEvent.getColor()); // assuming color is a field in the Event entity
             Event savedEvent = eventRepository.save(existingEvent);
             return new ResponseEntity<>(savedEvent, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @Override
+    public ResponseWrapperDto searchByTrainer(String trainer) {
+        ResponseWrapperDto responseWrapperDto = new ResponseWrapperDto();
+        List<Event> events = eventRepository.findByTrainer(trainer);
+        if (events.isEmpty()) {
+            responseWrapperDto.setStatus(RequestStatusTypes.FAILED.toString());
+            responseWrapperDto.setMessage("No Events Found for this trainer");
+            responseWrapperDto.setData("Nil");
+        } else {
+            responseWrapperDto.setStatus(RequestStatusTypes.SUCCESS.toString());
+            responseWrapperDto.setMessage("Events found for trainer");
+            responseWrapperDto.setData(events);
+        }
+        return responseWrapperDto;
+    }
+
+    @Override
+    public List<YtmsUser> getAllTrainers() {
+        return userRepo.findAllTrainers("ROLE_TRAINER");
     }
 }
