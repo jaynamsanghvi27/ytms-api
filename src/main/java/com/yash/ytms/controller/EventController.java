@@ -70,4 +70,11 @@ Event event = eventDto.getEvent();
         return  trainers;
     }
 
+    @GetMapping("/searchbyTrainer")
+    public List<Event> searchByTrainerEmail(@RequestParam String trainerEmail){
+
+        List<Event> events= (List<Event>) eventService.searchByTrainer(trainerEmail);
+        return events;
+    }
+
 }
