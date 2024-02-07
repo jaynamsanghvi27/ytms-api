@@ -31,4 +31,6 @@ public interface IYtmsUserService {
     Boolean resetPassword(Map<String, String> map);
 
     ResponseWrapperDto changePassword(Map<String, String> map);
+
+    List<YtmsUserDto> getAllTrainers();
 }
