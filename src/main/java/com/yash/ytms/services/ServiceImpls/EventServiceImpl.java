@@ -61,7 +61,6 @@ public class EventServiceImpl implements EventService {
             existingEvent.setTitle(updatedEvent.getTitle());
             existingEvent.setStart(updatedEvent.getStart());
             existingEvent.setEnd(updatedEvent.getEnd());
-            existingEvent.setYtmsUser((updatedEvent.getYtmsUser()));
             existingEvent.setColor(updatedEvent.getColor()); // assuming color is a field in the Event entity
             Event savedEvent = eventRepository.save(existingEvent);
             return new ResponseEntity<>(savedEvent, HttpStatus.OK);

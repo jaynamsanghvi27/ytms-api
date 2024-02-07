@@ -9,10 +9,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class EventDto {
-    private String title;
-    private String start;
-    private  String end;
-    private  String color;
+    private Event event;
     private String trainerEmail;
 
 }
