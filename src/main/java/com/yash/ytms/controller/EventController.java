@@ -46,7 +46,7 @@ public class EventController {
     @PostMapping
     public ResponseEntity<Event> createEvent(@RequestBody EventDto eventDto) {
 String email = eventDto.getTrainerEmail();
-Event event = eventDto.getEvent();
+Event event = modelMapper.convertValue(eventDto,Event.class);
         System.out.println("I am in create use backend "+eventDto.toString());
 
         YtmsUserDto ytmsUserDto= this.userService.getUserByEmailAdd(email);
@@ -54,7 +54,8 @@ Event event = eventDto.getEvent();
             YtmsUser ytmsUser= modelMapper.convertValue(ytmsUserDto,YtmsUser.class);
             event.setYtmsUser(ytmsUser);
         }
-        return eventService.createEvent(event);
+         eventService.createEvent(event);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{eventId}")
