@@ -222,4 +222,18 @@ public class YtmsUserServiceImpl implements IYtmsUserService {
 
         return responseWrapperDto;
     }
+
+    @Override
+    public List<YtmsUserDto> getAllTrainers() {
+        List<YtmsUser> allTrainers = this.userRepository.findAllTrainers();
+        if (!allTrainers.isEmpty()) {
+            return allTrainers
+                    .stream()
+                    .map(yur -> this
+                            .modelMapper
+                            .map(yur, YtmsUserDto.class))
+                    .toList();
+        } else
+            throw new ApplicationException("No Trainers found !");
+    }
 }

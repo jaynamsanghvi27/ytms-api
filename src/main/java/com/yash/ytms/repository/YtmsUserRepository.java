@@ -4,7 +4,6 @@ import com.yash.ytms.domain.YtmsUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +35,7 @@ public interface YtmsUserRepository extends JpaRepository<YtmsUser, Long> {
     @Transactional
     @Query("update YtmsUser yur set yur.accountStatus=com.yash.ytms.constants.UserAccountStatusTypes.DECLINED where yur.emailAdd=?1")
     Integer declinePendingUser(String emailAdd);
-    @Query("SELECT yur FROM YtmsUser yur WHERE yur.userRole .roleTypes=:roleType")
-    List<YtmsUser> findAllTrainers(@Param("roleType") String roleType);
+
+    @Query("SELECT yur FROM YtmsUser yur WHERE yur.userRole.roleTypes=com.yash.ytms.constants.UserRoleTypes.ROLE_TRAINER")
+    List<YtmsUser> findAllTrainers();
 }

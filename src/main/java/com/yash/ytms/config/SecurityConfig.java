@@ -98,7 +98,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/register/**").permitAll()
                             .requestMatchers("/login/**").permitAll()
-                            .requestMatchers("/api/events/**").permitAll()
                             .requestMatchers("/users/forgotPassword").permitAll()
                             .requestMatchers("/users/resetPassword").permitAll()
                             .anyRequest().authenticated();
