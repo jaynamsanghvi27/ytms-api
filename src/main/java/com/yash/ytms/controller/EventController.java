@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yash.ytms.domain.Event;
 import com.yash.ytms.domain.YtmsUser;
 import com.yash.ytms.dto.EventDto;
+import com.yash.ytms.dto.ResponseWrapperDto;
 import com.yash.ytms.dto.YtmsUserDto;
 import com.yash.ytms.services.IServices.EventService;
 import com.yash.ytms.services.IServices.IYtmsUserService;
+import jdk.jshell.Snippet;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -71,10 +73,10 @@ Event event = eventDto.getEvent();
     }
 
     @GetMapping("/searchbyTrainer")
-    public List<Event> searchByTrainerEmail(@RequestParam String trainerEmail){
+    public ResponseEntity<ResponseWrapperDto>  searchByTrainerEmail(@RequestParam String trainerEmail){
 
-        List<Event> events= (List<Event>) eventService.searchByTrainer(trainerEmail);
-        return events;
+         ResponseWrapperDto events=  eventService.searchByTrainer(trainerEmail);
+        return  new ResponseEntity<>(events, HttpStatus.OK);
     }
 
 }
