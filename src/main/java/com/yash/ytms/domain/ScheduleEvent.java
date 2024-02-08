@@ -33,11 +33,11 @@ public class ScheduleEvent {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_ts")
-    private LocalDateTime startTS;
+    private LocalDateTime start;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_ts")
-    private LocalDateTime endTS;
+    private LocalDateTime end;
 
     @Column(name = "color")
     private String color;
