@@ -15,9 +15,9 @@ public class ScheduleEventDto {
 
     private String title;
 
-    private LocalDateTime startTS;
+    private LocalDateTime start;
 
-    private LocalDateTime endTS;
+    private LocalDateTime end;
 
     private String color;
 

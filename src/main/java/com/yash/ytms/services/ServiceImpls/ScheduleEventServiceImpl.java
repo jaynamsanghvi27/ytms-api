@@ -158,8 +158,8 @@ public class ScheduleEventServiceImpl implements IScheduleEventService {
                 if (StringUtils.equals(scheduleEvent.getScheduleUser().getEmailAdd(),
                         userDto.getEmailAdd())) {
                     scheduleEvent.setTitle(scheduleEventDto.getTitle());
-                    scheduleEvent.setStartTS(scheduleEventDto.getStartTS());
-                    scheduleEvent.setEndTS(scheduleEventDto.getEndTS());
+                    scheduleEvent.setStart(scheduleEventDto.getStart());
+                    scheduleEvent.setEnd(scheduleEventDto.getEnd());
                     scheduleEvent.setColor(scheduleEventDto.getColor());
 
                     //reassigning the object with updated value

@@ -36,6 +36,6 @@ public interface YtmsUserRepository extends JpaRepository<YtmsUser, Long> {
     @Query("update YtmsUser yur set yur.accountStatus=com.yash.ytms.constants.UserAccountStatusTypes.DECLINED where yur.emailAdd=?1")
     Integer declinePendingUser(String emailAdd);
 
-    @Query("SELECT yur FROM YtmsUser yur WHERE yur.userRole.roleTypes=com.yash.ytms.constants.UserRoleTypes.ROLE_TRAINER")
+    @Query("select yur from YtmsUser yur where yur.userRole.roleTypes='ROLE_TRAINER'")
     List<YtmsUser> findAllTrainers();
 }
