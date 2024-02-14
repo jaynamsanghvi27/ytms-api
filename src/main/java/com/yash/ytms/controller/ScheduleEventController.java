@@ -1,8 +1,10 @@
 package com.yash.ytms.controller;
 
-import com.yash.ytms.dto.ResponseWrapperDto;
-import com.yash.ytms.dto.ScheduleEventDto;
-import com.yash.ytms.services.IServices.IScheduleEventService;
+import java.security.Principal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
-import java.util.List;
+import com.yash.ytms.dto.ResponseWrapperDto;
+import com.yash.ytms.dto.ScheduleEventDto;
+import com.yash.ytms.services.IServices.IScheduleEventService;
 
 @RestController
 @RequestMapping("/calendar/events")
@@ -25,10 +28,23 @@ public class ScheduleEventController {
 
     @Autowired
     private IScheduleEventService scheduleEventService;
+    
+    private static DateTimeFormatter dtf= DateTimeFormatter.ofPattern("dd-MMM-yyyy");
+    
+    
 
     @GetMapping("/get/all")
     public ResponseEntity<List<ScheduleEventDto>> getAllScheduleEvents() {
         List<ScheduleEventDto> scheduleEvents = this.scheduleEventService.getAllScheduleEvents();
+        return new ResponseEntity<>(scheduleEvents, HttpStatus.OK);
+    }
+    
+    @PostMapping("/get/allEventsForUser")
+    public ResponseEntity<List<ScheduleEventDto>> getAllEventsForUser(
+    		@RequestParam("username")String username,
+    		@RequestParam("date") String date) {
+    	LocalDate datetime= LocalDate.parse(date, dtf); 
+        List<ScheduleEventDto> scheduleEvents = this.scheduleEventService.getAllEventsForUser(username,datetime);
         return new ResponseEntity<>(scheduleEvents, HttpStatus.OK);
     }
 
