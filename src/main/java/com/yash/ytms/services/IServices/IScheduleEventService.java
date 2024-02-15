@@ -1,11 +1,10 @@
 package com.yash.ytms.services.IServices;
 
-import java.security.Principal;
-import java.time.LocalDate;
-import java.util.List;
-
 import com.yash.ytms.dto.ResponseWrapperDto;
 import com.yash.ytms.dto.ScheduleEventDto;
+
+import java.security.Principal;
+import java.util.List;
 
 
 public interface IScheduleEventService {
@@ -17,7 +16,8 @@ public interface IScheduleEventService {
     ScheduleEventDto getScheduleEventById(Integer eventId);
 
     List<ScheduleEventDto> getAllScheduleEvents();
-    List<ScheduleEventDto> getAllEventsForUser(String username, LocalDate datetime);
+
+    List<ScheduleEventDto> getAllEventsForUser(Principal principal, String date);
 
     ResponseWrapperDto deleteScheduleEventById(Integer eventId, Principal principal);
 
