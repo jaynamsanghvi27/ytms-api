@@ -12,5 +12,9 @@ public enum RequestStatusTypes {
 
     SUCCESS,
 
-    FAILED
+    FAILED,
+
+    NOT_FOUND,
+
+    UNAUTHORIZED
 }

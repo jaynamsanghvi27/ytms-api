@@ -67,4 +67,10 @@ public class UsersController {
     public ResponseWrapperDto changePassword(@RequestBody Map<String, String> map) {
         return this.userService.changePassword(map);
     }
+
+    @GetMapping("/get/all-trainers")
+    public ResponseEntity<List<YtmsUserDto>> getAllTrainers() {
+        List<YtmsUserDto> allTrainers = this.userService.getAllTrainers();
+        return new ResponseEntity<>(allTrainers, HttpStatus.OK);
+    }
 }
