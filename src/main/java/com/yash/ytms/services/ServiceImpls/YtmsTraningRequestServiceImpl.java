@@ -5,7 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.yash.ytms.constants.StatusTypes;
+//import com.yash.ytms.constants.StatusTypes;
 import com.yash.ytms.domain.TrainingRequestForm;
 import com.yash.ytms.dto.ResponseWrapperDto;
 import com.yash.ytms.dto.TrainingRequestFormDto;
@@ -33,20 +33,20 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
                 if (ObjectUtils.isNotEmpty(trainingRequestForm)) {
                 	requestRepository.save(trainingRequestForm);
                     responseWrapperDto.setMessage("Data Save Successfully..");
-                    responseWrapperDto.setStatus(StatusTypes.SUCCESS.toString());
+//                    responseWrapperDto.setStatus(StatusTypes.SUCCESS.toString());
                 } else {
                     responseWrapperDto.setMessage("transection fail !");
-                    responseWrapperDto.setStatus(StatusTypes.FAILED.toString());
+//                    responseWrapperDto.setStatus(StatusTypes.FAILED.toString());
                 }
 //
             } catch (Exception e) {
                 responseWrapperDto.setMessage("unable to save training data !");
-                responseWrapperDto.setStatus(StatusTypes.FAILED.toString());
+//                responseWrapperDto.setStatus(StatusTypes.FAILED.toString());
             }
 
         } else {
             responseWrapperDto.setMessage("Training Request Form is empty !");
-            responseWrapperDto.setStatus(StatusTypes.FAILED.toString());
+//            responseWrapperDto.setStatus(StatusTypes.FAILED.toString());
 
         }
         return responseWrapperDto;
