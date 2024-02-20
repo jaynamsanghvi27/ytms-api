@@ -30,7 +30,7 @@ public class EmailUtil {
         mimeMessageHelper.setSubject("SetPassword");
         mimeMessageHelper.setText("""
                 	        
-                 <a href="http://localhost:4200/reset-password?email=%s">click here to reset password</a>
+                 <a href="http://localhost:4200/reset-password?session=%s">click here to reset password</a>
                 	        
                 """.formatted(Base64.getEncoder().encodeToString(email.getBytes())), true);
 

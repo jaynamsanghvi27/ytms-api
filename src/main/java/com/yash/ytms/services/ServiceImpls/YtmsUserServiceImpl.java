@@ -1,6 +1,7 @@
 package com.yash.ytms.services.ServiceImpls;
 
-import com.yash.ytms.constants.StatusTypes;
+import com.yash.ytms.constants.RequestStatusTypes;
+import com.yash.ytms.constants.UserAccountStatusTypes;
 import com.yash.ytms.constants.UserRoleTypes;
 import com.yash.ytms.domain.YtmsUser;
 import com.yash.ytms.dto.ResponseWrapperDto;
@@ -8,6 +9,7 @@ import com.yash.ytms.dto.UserRoleDto;
 import com.yash.ytms.dto.YtmsUserDto;
 import com.yash.ytms.exception.ApplicationException;
 import com.yash.ytms.repository.YtmsUserRepository;
+import com.yash.ytms.security.userdetails.CustomUserDetails;
 import com.yash.ytms.services.IServices.IUserRoleService;
 import com.yash.ytms.services.IServices.IYtmsUserService;
 import com.yash.ytms.util.EmailUtil;
@@ -16,6 +18,8 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -73,7 +77,7 @@ public class YtmsUserServiceImpl implements IYtmsUserService {
                             .map(userDto, YtmsUser.class);
 
                     user.setPassword(this.passwordEncoder.encode(userDto.getPassword()));
-                    user.setIsApproved("PENDING");
+                    user.setAccountStatus(UserAccountStatusTypes.PENDING);
 
                     //reassigned with the new created data
                     user = this
@@ -134,6 +138,19 @@ public class YtmsUserServiceImpl implements IYtmsUserService {
     }
 
     @Override
+    public Boolean declinePendingUser(String emailAdd) {
+        if (StringUtils.isNotEmpty(emailAdd)) {
+            Integer status = this.userRepository.declinePendingUser(emailAdd);
+            if (status == 1)
+                return true;
+            else
+                throw new ApplicationException("Failed while declining user account");
+        } else {
+            throw new ApplicationException("Email address is empty.");
+        }
+    }
+
+    @Override
     public ResponseWrapperDto forgotPassword(String email) {
         ResponseWrapperDto responseWrapperDto = new ResponseWrapperDto();
         if (StringUtils.isNotEmpty(email)) {
@@ -142,20 +159,20 @@ public class YtmsUserServiceImpl implements IYtmsUserService {
                 if (ObjectUtils.isNotEmpty(ytmsUser)) {
                     emailUtil.sendSetPasswordEmail(email);
                     responseWrapperDto.setMessage("please check your email to reset password");
-                    responseWrapperDto.setStatus(StatusTypes.SUCCESS.toString());
+                    responseWrapperDto.setStatus(RequestStatusTypes.SUCCESS.toString());
                 } else {
                     responseWrapperDto.setMessage("User does not exist with the provided email !");
-                    responseWrapperDto.setStatus(StatusTypes.FAILED.toString());
+                    responseWrapperDto.setStatus(RequestStatusTypes.FAILED.toString());
                 }
 
             } catch (MessagingException e) {
                 responseWrapperDto.setMessage("unable to set password !");
-                responseWrapperDto.setStatus(StatusTypes.FAILED.toString());
+                responseWrapperDto.setStatus(RequestStatusTypes.FAILED.toString());
             }
 
         } else {
             responseWrapperDto.setMessage("Email is empty !");
-            responseWrapperDto.setStatus(StatusTypes.FAILED.toString());
+            responseWrapperDto.setStatus(RequestStatusTypes.FAILED.toString());
 
         }
         return responseWrapperDto;
@@ -174,5 +191,49 @@ public class YtmsUserServiceImpl implements IYtmsUserService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public ResponseWrapperDto changePassword(Map<String, String> map) {
+        String password = map.get("password");
+        String oldPassword = map.get("oldPassword");
+        ResponseWrapperDto responseWrapperDto = new ResponseWrapperDto();
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        CustomUserDetails auth = (CustomUserDetails) securityContext.getAuthentication().getPrincipal();
+        String email = auth.getEmailAdd();
+
+        YtmsUser user = this.userRepository.getUserByEmail(email);
+
+        if (user != null && StringUtils.isNotEmpty(password) && StringUtils.isNotEmpty(oldPassword)) {
+            if (passwordEncoder.matches(oldPassword, user.getPassword())) {
+                user.setPassword(passwordEncoder.encode(password));
+                this.userRepository.save(user);
+                responseWrapperDto.setStatus(RequestStatusTypes.SUCCESS.toString());
+                System.out.println("Password changed successfully.");
+            } else {
+                System.out.println("Old password doesn't match.");
+            }
+        } else {
+            responseWrapperDto.setMessage("User not found or password is empty.");
+            responseWrapperDto.setStatus(RequestStatusTypes.FAILED.toString());
+            System.out.println("User not found or password is empty.");
+        }
+
+        return responseWrapperDto;
+    }
+
+    @Override
+    public List<YtmsUserDto> getAllTrainers() {
+        List<YtmsUser> allTrainers = this.userRepository.findAllTrainers();
+        if (!allTrainers.isEmpty()) {
+            return allTrainers
+                    .stream()
+                    .map(yur -> this
+                            .modelMapper
+                            .map(yur, YtmsUserDto.class))
+                    .toList();
+        } else
+            throw new ApplicationException("No Trainers found !");
     }
 }

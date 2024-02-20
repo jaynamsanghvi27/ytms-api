@@ -8,9 +8,13 @@ package com.yash.ytms.constants;
  * @author - yash.raj
  * @since - 25-01-2024
  */
-public enum StatusTypes {
+public enum RequestStatusTypes {
 
     SUCCESS,
 
-    FAILED
+    FAILED,
+
+    NOT_FOUND,
+
+    UNAUTHORIZED
 }

@@ -46,6 +46,13 @@ public class UsersController {
         return new ResponseEntity<>(status, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_TECHNICAL_MANAGER')")
+    @PostMapping("/decline")
+    public ResponseEntity<Boolean> declinePendingUser(@RequestParam String emailAdd) {
+        Boolean status = this.userService.declinePendingUser(emailAdd);
+        return new ResponseEntity<>(status, HttpStatus.OK);
+    }
+
     @PutMapping("/forgotPassword")
     public ResponseEntity<ResponseWrapperDto> forgotPassword(@RequestParam String email) {
         return new ResponseEntity<>(userService.forgotPassword(email), HttpStatus.OK);
@@ -54,5 +61,16 @@ public class UsersController {
     @PostMapping("/resetPassword")
     public Boolean resetPassword(@RequestBody Map<String, String> map) {
         return this.userService.resetPassword(map);
+    }
+
+    @PostMapping("/changePassword")
+    public ResponseWrapperDto changePassword(@RequestBody Map<String, String> map) {
+        return this.userService.changePassword(map);
+    }
+
+    @GetMapping("/get/all-trainers")
+    public ResponseEntity<List<YtmsUserDto>> getAllTrainers() {
+        List<YtmsUserDto> allTrainers = this.userService.getAllTrainers();
+        return new ResponseEntity<>(allTrainers, HttpStatus.OK);
     }
 }

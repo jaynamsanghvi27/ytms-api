@@ -2,6 +2,7 @@ package com.yash.ytms.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.yash.ytms.constants.UserAccountStatusTypes;
 import lombok.Data;
 
 /**
@@ -23,7 +24,7 @@ public class YtmsUserDto {
 
     private String confirmPassword;
 
-    private String isApproved;
+    private UserAccountStatusTypes accountStatus;
 
     private UserRoleDto userRole;
 

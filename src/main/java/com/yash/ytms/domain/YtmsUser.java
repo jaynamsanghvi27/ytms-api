@@ -1,7 +1,10 @@
 package com.yash.ytms.domain;
 
+import com.yash.ytms.constants.UserAccountStatusTypes;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -41,8 +44,9 @@ public class YtmsUser {
     @Transient
     private String confirmPassword;
 
-    @Column(name = "is_approved")
-    private String isApproved;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "account_status")
+    private UserAccountStatusTypes accountStatus;
 
     @ManyToOne
     @JoinColumn(name = "user_role")

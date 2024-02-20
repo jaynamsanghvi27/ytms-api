@@ -23,11 +23,19 @@ public interface YtmsUserRepository extends JpaRepository<YtmsUser, Long> {
     @Query("select yur from YtmsUser yur where yur.emailAdd=?1")
     YtmsUser getUserByEmail(String email);
 
-    @Query("select yur from YtmsUser yur where yur.isApproved='PENDING'")
+    @Query("select yur from YtmsUser yur where yur.accountStatus=com.yash.ytms.constants.UserAccountStatusTypes.PENDING")
     List<YtmsUser> getAllPendingUsers();
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Transactional
-    @Query("update YtmsUser yur set yur.isApproved='APPROVED' where yur.emailAdd=?1")
+    @Query("update YtmsUser yur set yur.accountStatus=com.yash.ytms.constants.UserAccountStatusTypes.APPROVED where yur.emailAdd=?1")
     Integer approvePendingUser(String emailAdd);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Transactional
+    @Query("update YtmsUser yur set yur.accountStatus=com.yash.ytms.constants.UserAccountStatusTypes.DECLINED where yur.emailAdd=?1")
+    Integer declinePendingUser(String emailAdd);
+
+    @Query("select yur from YtmsUser yur where yur.userRole.roleTypes='ROLE_TRAINER'")
+    List<YtmsUser> findAllTrainers();
 }
