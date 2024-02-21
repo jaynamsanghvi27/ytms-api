@@ -124,9 +124,11 @@ public class TrainingRequestForm {
 
 	/** Transient field for storing user name. */
 
-	@Transient
+//	@Transient
 
 	private String userName;
+	
+	private int noOfParticipant;
 
 	/** Pre-persist action to set the created date. */
 

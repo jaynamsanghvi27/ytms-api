@@ -35,5 +35,7 @@ public class TrainingRequestFormDto {
 	
 	private String userName;
 	
+	private int noOfParticipant;
+	
 	
 }
