@@ -18,7 +18,7 @@ import java.util.List;
  * @since - 25-01-2024
  */
 @Repository
-public interface YtmsUserRepository extends JpaRepository<YtmsUser, Long> {
+public interface YtmsUserRepository extends JpaRepository<YtmsUser, String> {
 
     @Query("select yur from YtmsUser yur where yur.emailAdd=?1")
     YtmsUser getUserByEmail(String email);
