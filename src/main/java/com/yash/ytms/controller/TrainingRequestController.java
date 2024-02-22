@@ -1,7 +1,6 @@
 package com.yash.ytms.controller;
 
 import java.security.Principal;
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.yash.ytms.domain.TrainingRequestForm;
 import com.yash.ytms.dto.ResponseWrapperDto;
 import com.yash.ytms.dto.TrainingRequestFormDto;
 import com.yash.ytms.services.IServices.IYtmsTraningRequestService;
@@ -38,7 +36,12 @@ public class TrainingRequestController {
 	}
 	//updateTrainingRequestForm
 	@PutMapping("/updateTrainingRequestForm")
-    public ResponseEntity<ResponseWrapperDto> updateTrainingRequestForm(@RequestBody TrainingRequestFormDto trainingRequestFormDto) {
-        return new ResponseEntity<>(traningRequestService.updateTrainingRequestForm(trainingRequestFormDto), HttpStatus.OK);
+    public ResponseEntity<ResponseWrapperDto> approveTrainingRequestForm(@RequestBody TrainingRequestFormDto trainingRequestFormDto) {
+        return new ResponseEntity<>(traningRequestService.approveTrainingRequestForm(trainingRequestFormDto), HttpStatus.OK);
+    }
+
+	@PutMapping("/decline-trf")
+    public ResponseEntity<ResponseWrapperDto> declineTrainingRequestForm(@RequestBody TrainingRequestFormDto trainingRequestFormDto) {
+        return new ResponseEntity<>(traningRequestService.declineTrainingRequestForm(trainingRequestFormDto), HttpStatus.OK);
     }
 }

@@ -2,6 +2,9 @@ package com.yash.ytms.dto;
 
 import java.util.Date;
 
+import com.yash.ytms.constants.UserAccountStatusTypes;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,10 +33,13 @@ public class TrainingRequestFormDto {
 	private Date createdAt;
 	
 	private Date updatedAt;
-	
-	private boolean status = Boolean.FALSE;
-	
+
+	private String status = UserAccountStatusTypes.PENDING.toString();
+
 	private String userName;
+
+	//to be used only in case of request declined
+	private String declinedMessage;
 	
 	private int noOfParticipant;
 	
