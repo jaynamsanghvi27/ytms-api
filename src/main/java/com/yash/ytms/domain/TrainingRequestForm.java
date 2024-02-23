@@ -2,15 +2,8 @@ package com.yash.ytms.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import com.yash.ytms.constants.UserAccountStatusTypes;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -120,7 +113,7 @@ public class TrainingRequestForm {
 
 	/** Status of the training. */
 
-	private boolean status = Boolean.FALSE;
+	private String status;
 
 	/** Transient field for storing user name. */
 
@@ -129,6 +122,9 @@ public class TrainingRequestForm {
 	private String userName;
 	
 	private int noOfParticipant;
+
+	//to be used only in case of request declined
+	private String declinedMessage;
 
 	/** Pre-persist action to set the created date. */
 

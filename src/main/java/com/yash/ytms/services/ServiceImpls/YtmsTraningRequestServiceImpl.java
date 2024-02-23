@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import com.yash.ytms.constants.UserAccountStatusTypes;
 import org.apache.commons.lang3.ObjectUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,7 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
             try {
             	trainingRequestForm = modelMapper.map(formDto, TrainingRequestForm.class);
                 if (ObjectUtils.isNotEmpty(trainingRequestForm)) {
+					trainingRequestForm.setStatus(UserAccountStatusTypes.PENDING.toString());
                 	requestRepository.save(trainingRequestForm);
                     responseWrapperDto.setMessage("Data Save Successfully..");
                 } else {
@@ -65,7 +67,7 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
 	}
 	
 	@Override
-	public ResponseWrapperDto updateTrainingRequestForm(TrainingRequestFormDto formDto) {
+	public ResponseWrapperDto approveTrainingRequestForm(TrainingRequestFormDto formDto) {
 		ResponseWrapperDto responseWrapperDto = new ResponseWrapperDto();
 		TrainingRequestForm trainingRequestForm = null;
         if (formDto != null) {
@@ -75,7 +77,8 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
             		TrainingRequestForm oldformDto = oldformDtoOpt.get();
             		oldformDto.setActualStartDate(formDto.getActualStartDate());
             		oldformDto.setActualEndDate(formDto.getActualEndDate());
-            		oldformDto.setStatus(true);
+            		oldformDto.setStatus(UserAccountStatusTypes.APPROVED.toString());
+					oldformDto.setDeclinedMessage("NA");
             		trainingRequestForm = modelMapper.map(oldformDto, TrainingRequestForm.class);
                     if (ObjectUtils.isNotEmpty(trainingRequestForm)) {
                     	requestRepository.save(trainingRequestForm);
@@ -95,7 +98,38 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
         }
         return responseWrapperDto;
 	}
-	
+
+	@Override
+	public ResponseWrapperDto declineTrainingRequestForm(TrainingRequestFormDto formDto) {
+		ResponseWrapperDto responseWrapperDto = new ResponseWrapperDto();
+		TrainingRequestForm trainingRequestForm = null;
+		if (formDto != null) {
+			try {
+				Optional<TrainingRequestForm> oldformDtoOpt = requestRepository.findById(formDto.getId());
+				if(oldformDtoOpt.isPresent()) {
+					TrainingRequestForm oldformDto = oldformDtoOpt.get();
+					oldformDto.setStatus(UserAccountStatusTypes.DECLINED.toString());
+					trainingRequestForm = modelMapper.map(oldformDto, TrainingRequestForm.class);
+					trainingRequestForm.setDeclinedMessage(formDto.getDeclinedMessage());
+					if (ObjectUtils.isNotEmpty(trainingRequestForm)) {
+						requestRepository.save(trainingRequestForm);
+						responseWrapperDto.setMessage("Data Save Successfully..");
+					} else {
+						responseWrapperDto.setMessage("transection fail !");
+					}
+				}
+
+			} catch (Exception e) {
+				responseWrapperDto.setMessage("unable to save training data !");
+			}
+
+		} else {
+			responseWrapperDto.setMessage("Training Request Form is empty !");
+
+		}
+		return responseWrapperDto;
+	}
+
 	@Override
 	public List<TrainingRequestFormDto> getTrainingRequestForm(Principal principal) {
 		// TODO Auto-generated method stub
