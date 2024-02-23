@@ -10,21 +10,20 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@ToString(exclude = {"id"})
 @Table(name = "nominations")
 public class Nomination {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "nomination_id", nullable = false)
-	private Long id;
+	private Integer id;
+	
 	private String emp_id;
 	private String emp_name;
 	private String emp_mail_id;
