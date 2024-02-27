@@ -1,4 +1,4 @@
-package com.yash.ytms.services.IServices;
+package  com.yash.ytms.services.IServices;
 
 import java.security.Principal;
 import java.util.List;
@@ -15,4 +15,8 @@ public interface IYtmsTraningRequestService {
 	ResponseWrapperDto declineTrainingRequestForm(TrainingRequestFormDto formDto);
 
 	List<TrainingRequestFormDto> getTrainingRequestForm(Principal principal);
+	
+	TrainingRequestFormDto getTrainingRequestFormById(long trainingId);
+	
+	ResponseWrapperDto editTrainingRequestForm(TrainingRequestFormDto formDto);
 }
