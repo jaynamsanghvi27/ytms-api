@@ -8,5 +8,5 @@ import org.springframework.web.multipart.MultipartFile;
 import com.yash.ytms.dto.NominationData;
 
 public interface INominationService {
-	List<NominationData> parseExcel(MultipartFile file) throws IOException;
+	List<NominationData> parseExcel(MultipartFile file) throws IOException ;
 }

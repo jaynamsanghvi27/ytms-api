@@ -41,6 +41,7 @@ public class NominationServiceImpl implements INominationService {
 
 		Iterator<Row> rowIterator = sheet.iterator();
 		// Skip header row if exists
+		// rowIterator = rowIterator.skip(1);
 		if (rowIterator.hasNext()) {
 			rowIterator.next();
 		}
@@ -65,16 +66,16 @@ public class NominationServiceImpl implements INominationService {
 	Nomination setNominationObject(Row row) {
 		Nomination nomination = new Nomination();
 
-			String formattedStringValue = new DecimalFormat("#").format(row.getCell(0).getNumericCellValue());
-			nomination.setEmp_id(formattedStringValue);
-			nomination.setEmp_name(row.getCell(1).getStringCellValue());
-			nomination.setEmp_mail_id(row.getCell(2).getStringCellValue());
-			nomination.setGrade(row.getCell(3).getStringCellValue());
-			nomination.setSkill(row.getCell(4).getStringCellValue());
-			nomination.setCurrent_allocation(row.getCell(5).getStringCellValue());
-			nomination.setProject(row.getCell(6).getStringCellValue());
-			nomination.setCurrent_location(row.getCell(7).getStringCellValue());
-			nomination.setTraining_id(1l);
+		String formattedStringValue = new DecimalFormat("#").format(row.getCell(0).getNumericCellValue());
+		nomination.setEmp_id(formattedStringValue);
+		nomination.setEmp_name(row.getCell(1).getStringCellValue());
+		nomination.setEmp_mail_id(row.getCell(2).getStringCellValue());
+		nomination.setGrade(row.getCell(3).getStringCellValue());
+		nomination.setSkill(row.getCell(4).getStringCellValue());
+		nomination.setCurrent_allocation(row.getCell(5).getStringCellValue());
+		nomination.setProject(row.getCell(6).getStringCellValue());
+		nomination.setCurrent_location(row.getCell(7).getStringCellValue());
+		nomination.setTraining_id(1l);
 
 		return nomination;
 	}
