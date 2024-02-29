@@ -12,4 +12,8 @@ import com.yash.ytms.dto.UnitMasterDto;
  */
 public interface IUnitMasterService {
 	public List<UnitMasterDto> getUnitMasterList();
+	
+	public UnitMasterDto createUnitMaster(UnitMasterDto userMasterDto);
+	
+	void unitUpdateScheduler();
 }
