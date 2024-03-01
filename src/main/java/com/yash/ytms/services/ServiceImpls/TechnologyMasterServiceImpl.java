@@ -3,6 +3,7 @@
  */
 package com.yash.ytms.services.ServiceImpls;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,12 +68,12 @@ public class TechnologyMasterServiceImpl implements ITechnologyMasterService {
 
         if (allTechnology.isEmpty()) {
 
-        	allTechnology.add(new TechnologyMasterDto(1, "JAVA", "java", null, null, true));
-        	allTechnology.add(new TechnologyMasterDto(2, "REACT", "react", null, null, true));
-        	allTechnology.add(new TechnologyMasterDto(3, "UI-HTML", "html", null, null, true));
-        	allTechnology.add(new TechnologyMasterDto(4, "UI-CSS", "css", null, null, true));
-        	allTechnology.add(new TechnologyMasterDto(5, "ANGULER", "anguler", null, null, true));
-        	allTechnology.add(new TechnologyMasterDto(6, "DotNet", "c#", null, null, true));
+        	allTechnology.add(new TechnologyMasterDto(1, "JAVA", "java", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), true));
+        	allTechnology.add(new TechnologyMasterDto(2, "REACT", "react", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), true));
+        	allTechnology.add(new TechnologyMasterDto(3, "UI-HTML", "html", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), true));
+        	allTechnology.add(new TechnologyMasterDto(4, "UI-CSS", "css", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), true));
+        	allTechnology.add(new TechnologyMasterDto(5, "ANGULER", "anguler", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), true));
+        	allTechnology.add(new TechnologyMasterDto(6, "DotNet", "c#", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), true));
 
         	allTechnology.forEach(this :: createTechnologyMaster);
         }
