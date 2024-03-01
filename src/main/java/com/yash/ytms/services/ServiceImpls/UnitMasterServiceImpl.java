@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.yash.ytms.domain.UnitMaster;
+import com.yash.ytms.dto.ResponseWrapperDto;
 import com.yash.ytms.dto.UnitMasterDto;
 import com.yash.ytms.exception.ApplicationException;
 import com.yash.ytms.repository.UnitMasterRepository;
@@ -77,4 +78,30 @@ public class UnitMasterServiceImpl implements IUnitMasterService {
 	            allUnits.forEach(this :: createUnitMaster);
 	        }
 	    }
+
+	
+
+	public ResponseWrapperDto saveUnit(UnitMasterDto formDto) {
+		ResponseWrapperDto responseWrapperDto = new ResponseWrapperDto();
+		UnitMaster master = null;
+		if (formDto != null) {
+			try {
+				master = modelMapper.map(formDto, UnitMaster.class);
+				if (ObjectUtils.isNotEmpty(master)) {
+					master.setStatus(true);
+					responseWrapperDto.setData(unitMasterRepository.save(master));
+					responseWrapperDto.setMessage("Data Save Successfully..");
+				} else {
+					responseWrapperDto.setMessage("transection fail !");
+				}
+			} catch (Exception e) {
+				responseWrapperDto.setMessage("unable to save data !");
+			}
+
+		} else {
+			responseWrapperDto.setMessage("Request Form is empty !");
+
+		}
+		return responseWrapperDto;
+	}
 }
