@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.yash.ytms.domain.TrainingTypesMaster;
+import com.yash.ytms.dto.ResponseWrapperDto;
 import com.yash.ytms.dto.TrainingTypesMasterDto;
 import com.yash.ytms.exception.ApplicationException;
 import com.yash.ytms.repository.TrainingTypesMasterRepository;
@@ -76,4 +77,28 @@ public class TrainingTypesMasterServiceImpl implements ITrainingTypesMasterServi
         	allTrainings.forEach(this :: createTrainingMaster);
         }
     }
+	
+	public ResponseWrapperDto saveTrainingType(TrainingTypesMasterDto formDto) {
+		ResponseWrapperDto responseWrapperDto = new ResponseWrapperDto();
+		TrainingTypesMaster master = null;
+		if (formDto != null) {
+			try {
+				master = modelMapper.map(formDto, TrainingTypesMaster.class);
+				if (ObjectUtils.isNotEmpty(master)) {
+					master.setStatus(true);
+					responseWrapperDto.setData(typesMasterRepository.save(master));
+					responseWrapperDto.setMessage("Data Save Successfully..");
+				} else {
+					responseWrapperDto.setMessage("transection fail !");
+				}
+			} catch (Exception e) {
+				responseWrapperDto.setMessage("unable to save data !");
+			}
+
+		} else {
+			responseWrapperDto.setMessage("Request Form is empty !");
+
+		}
+		return responseWrapperDto;
+	}
 }

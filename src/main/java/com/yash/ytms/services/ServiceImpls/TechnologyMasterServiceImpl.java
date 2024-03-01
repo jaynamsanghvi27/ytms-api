@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.yash.ytms.domain.TechnologyMaster;
+import com.yash.ytms.dto.ResponseWrapperDto;
 import com.yash.ytms.dto.TechnologyMasterDto;
 import com.yash.ytms.exception.ApplicationException;
 import com.yash.ytms.repository.TechnologyMasterRepository;
@@ -77,4 +78,28 @@ public class TechnologyMasterServiceImpl implements ITechnologyMasterService {
         	allTechnology.forEach(this :: createTechnologyMaster);
         }
     }
+	
+	public ResponseWrapperDto saveTechnology(TechnologyMasterDto formDto) {
+		ResponseWrapperDto responseWrapperDto = new ResponseWrapperDto();
+		TechnologyMaster master = null;
+		if (formDto != null) {
+			try {
+				master = modelMapper.map(formDto, TechnologyMaster.class);
+				if (ObjectUtils.isNotEmpty(master)) {
+					master.setStatus(true);
+					responseWrapperDto.setData(technologyMasterRepository.save(master));
+					responseWrapperDto.setMessage("Data Save Successfully..");
+				} else {
+					responseWrapperDto.setMessage("transection fail !");
+				}
+			} catch (Exception e) {
+				responseWrapperDto.setMessage("unable to save data !");
+			}
+
+		} else {
+			responseWrapperDto.setMessage("Request Form is empty !");
+
+		}
+		return responseWrapperDto;
+	}
 }

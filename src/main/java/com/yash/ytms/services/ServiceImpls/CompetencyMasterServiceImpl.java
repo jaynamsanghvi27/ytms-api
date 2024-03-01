@@ -14,9 +14,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.yash.ytms.domain.CompetencyMaster;
-import com.yash.ytms.domain.TechnologyMaster;
 import com.yash.ytms.dto.CompetencyMasterDto;
-import com.yash.ytms.dto.TechnologyMasterDto;
+import com.yash.ytms.dto.ResponseWrapperDto;
 import com.yash.ytms.exception.ApplicationException;
 import com.yash.ytms.repository.CompetencyMasterRepository;
 import com.yash.ytms.services.IServices.ICompetencyMasterService;
@@ -68,7 +67,7 @@ public class CompetencyMasterServiceImpl implements ICompetencyMasterService {
 
         if (allCompetency.isEmpty()) {
 
-        	allCompetency.add(new CompetencyMasterDto(1, "", true));
+        	allCompetency.add(new CompetencyMasterDto(1, "JAVA", true));
         	allCompetency.add(new CompetencyMasterDto(2, "REACT", true));
         	allCompetency.add(new CompetencyMasterDto(3, "UI-HTML", true));
         	allCompetency.add(new CompetencyMasterDto(4, "UI-CSS", true));
@@ -78,4 +77,28 @@ public class CompetencyMasterServiceImpl implements ICompetencyMasterService {
         	allCompetency.forEach(this :: createCompetencyMaster);
         }
     }
+	
+	public ResponseWrapperDto saveCompetency(CompetencyMasterDto formDto) {
+		ResponseWrapperDto responseWrapperDto = new ResponseWrapperDto();
+		CompetencyMaster master = null;
+		if (formDto != null) {
+			try {
+				master = modelMapper.map(formDto, CompetencyMaster.class);
+				if (ObjectUtils.isNotEmpty(master)) {
+					master.setStatus(true);
+					responseWrapperDto.setData(competencyMasterRepository.save(master));
+					responseWrapperDto.setMessage("Data Save Successfully..");
+				} else {
+					responseWrapperDto.setMessage("transection fail !");
+				}
+			} catch (Exception e) {
+				responseWrapperDto.setMessage("unable to save data !");
+			}
+
+		} else {
+			responseWrapperDto.setMessage("Request Form is empty !");
+
+		}
+		return responseWrapperDto;
+	}
 }
