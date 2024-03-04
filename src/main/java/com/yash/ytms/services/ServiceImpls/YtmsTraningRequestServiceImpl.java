@@ -152,5 +152,51 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
 		return requestFormList;
 	}
 	
+	@Override
+	public TrainingRequestFormDto getTrainingRequestFormById(long trainingId) {
+		// TODO Auto-generated method stub
+		TrainingRequestFormDto requestForm = null;
+		TrainingRequestForm form = new TrainingRequestForm();
+		try {
+			
+				form = requestRepository.findById(trainingId).get();
+						
+			requestForm = modelMapper.map(form, TrainingRequestFormDto.class);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return requestForm;
+	}
+
+	@Override
+	public ResponseWrapperDto editTrainingRequestForm(TrainingRequestFormDto formDto) {
+		ResponseWrapperDto responseWrapperDto = new ResponseWrapperDto();
+		TrainingRequestForm trainingRequestForm = null;
+		Optional<TrainingRequestForm> getTraining = null;
+        if (formDto != null) {
+            try {
+            	getTraining=requestRepository.findById(formDto.getId());
+            	trainingRequestForm = modelMapper.map(formDto, TrainingRequestForm.class);
+            	if(getTraining.isPresent()) {
+            		trainingRequestForm.setCreatedAt(getTraining.get().getCreatedAt());
+            	}
+                if (ObjectUtils.isNotEmpty(trainingRequestForm)) {
+					trainingRequestForm.setStatus(UserAccountStatusTypes.PENDING.toString());
+                	requestRepository.save(trainingRequestForm);
+                    responseWrapperDto.setMessage("Data Updated Successfully..");
+                } else {
+                    responseWrapperDto.setMessage("transection fail !");
+                }
+            } catch (Exception e) {
+                responseWrapperDto.setMessage("unable to update training data !");
+            }
+
+        } else {
+            responseWrapperDto.setMessage("Training Request Form is empty !");
+
+        }
+        return responseWrapperDto;
+	}
 	
 }

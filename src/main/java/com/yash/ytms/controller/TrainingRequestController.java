@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +22,7 @@ import com.yash.ytms.services.IServices.IYtmsTraningRequestService;
 @RestController
 @RequestMapping("/register")
 public class TrainingRequestController {
+	//getTrainingRequestFormById
 
 	@Autowired
     private IYtmsTraningRequestService traningRequestService;
@@ -38,10 +40,20 @@ public class TrainingRequestController {
 	@PutMapping("/updateTrainingRequestForm")
     public ResponseEntity<ResponseWrapperDto> approveTrainingRequestForm(@RequestBody TrainingRequestFormDto trainingRequestFormDto) {
         return new ResponseEntity<>(traningRequestService.approveTrainingRequestForm(trainingRequestFormDto), HttpStatus.OK);
-    }
+    }	
 
 	@PutMapping("/decline-trf")
     public ResponseEntity<ResponseWrapperDto> declineTrainingRequestForm(@RequestBody TrainingRequestFormDto trainingRequestFormDto) {
         return new ResponseEntity<>(traningRequestService.declineTrainingRequestForm(trainingRequestFormDto), HttpStatus.OK);
+    }
+	
+	@GetMapping("/getTrainingRequestFormById/{trainingID}")
+	public TrainingRequestFormDto getTrainingRequestForm(@PathVariable long trainingID){
+		return traningRequestService.getTrainingRequestFormById(trainingID);
+	}
+	
+	@PutMapping("/editTrainingRequestForm")
+    public ResponseEntity<ResponseWrapperDto> editTrainingRequestForm(@RequestBody TrainingRequestFormDto trainingRequestFormDto) {
+        return new ResponseEntity<>(traningRequestService.editTrainingRequestForm(trainingRequestFormDto), HttpStatus.OK);
     }
 }
