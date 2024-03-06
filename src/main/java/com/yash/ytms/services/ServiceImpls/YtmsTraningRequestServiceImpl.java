@@ -2,19 +2,16 @@ package com.yash.ytms.services.ServiceImpls;
 
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import com.yash.ytms.constants.UserAccountStatusTypes;
 import org.apache.commons.lang3.ObjectUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.yash.ytms.constants.UserAccountStatusTypes;
 import com.yash.ytms.constants.UserRoleTypes;
 //import com.yash.ytms.constants.StatusTypes;
 import com.yash.ytms.domain.TrainingRequestForm;
