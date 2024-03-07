@@ -38,5 +38,10 @@ public class NominationBulkUploadController {
 	 public List<NominationDto> getNominationListByTrainingId(@PathVariable Long trainingId){
 		 return iNominationUploadService.findNominationsByTrainingID(trainingId); 
 	 }
+	 
+	 @GetMapping("/register/getNominationById/{nominationId}")
+	 public NominationDto getNominationById(@PathVariable Long nominationId){
+		 return iNominationUploadService.getNomiationById(nominationId);
+	 }
 	
 }

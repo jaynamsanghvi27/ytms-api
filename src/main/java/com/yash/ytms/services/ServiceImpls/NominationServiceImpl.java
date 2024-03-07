@@ -99,4 +99,9 @@ public class NominationServiceImpl implements INominationService {
 		return modelMapper.map(nominationUploadRepository.findAllByTrainingId(trainingId), List.class);
 	}
 
+	@Override
+	public NominationDto getNomiationById(Long id) {
+		return modelMapper.map(nominationUploadRepository.getById(id), NominationDto.class);
+	}
+
 }
