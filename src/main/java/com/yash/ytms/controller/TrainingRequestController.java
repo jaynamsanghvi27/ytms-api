@@ -2,6 +2,7 @@ package com.yash.ytms.controller;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,10 +13,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.yash.ytms.dto.NominationDto;
 import com.yash.ytms.dto.ResponseWrapperDto;
 import com.yash.ytms.dto.TrainingRequestFormDto;
+import com.yash.ytms.dto.TrfWithNominationDto;
 import com.yash.ytms.services.IServices.IYtmsTraningRequestService;
 
 
@@ -28,8 +32,8 @@ public class TrainingRequestController {
     private IYtmsTraningRequestService traningRequestService;
 	
 	@PostMapping("/saveTrainingRequestForm")
-    public ResponseEntity<ResponseWrapperDto> saveTrainingRequestForm(@RequestBody TrainingRequestFormDto trainingRequestFormDto) {
-        return new ResponseEntity<>(traningRequestService.saveTrainingRequestForm(trainingRequestFormDto), HttpStatus.OK);
+	public ResponseEntity<ResponseWrapperDto> saveTrainingRequestForm(@RequestBody TrfWithNominationDto trfNominationDto) {
+        return new ResponseEntity<>(traningRequestService.saveTrainingRequestForm(trfNominationDto), HttpStatus.OK);
     }
 	
 	@GetMapping("/getTrainingRequestForm")

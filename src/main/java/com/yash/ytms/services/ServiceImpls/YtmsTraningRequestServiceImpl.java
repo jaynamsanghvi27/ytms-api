@@ -13,13 +13,17 @@ import org.springframework.stereotype.Service;
 
 import com.yash.ytms.constants.UserAccountStatusTypes;
 import com.yash.ytms.constants.UserRoleTypes;
+import com.yash.ytms.domain.Nomination;
 //import com.yash.ytms.constants.StatusTypes;
 import com.yash.ytms.domain.TrainingRequestForm;
+import com.yash.ytms.dto.NominationDto;
 import com.yash.ytms.dto.ResponseWrapperDto;
 import com.yash.ytms.dto.TrainingRequestFormDto;
+import com.yash.ytms.dto.TrfWithNominationDto;
 import com.yash.ytms.repository.TrainingRequestRepository;
 import com.yash.ytms.security.userdetails.CustomUserDetails;
 import com.yash.ytms.security.userdetails.CustomUserDetailsServiceImpl;
+import com.yash.ytms.services.IServices.INominationService;
 import com.yash.ytms.services.IServices.IYtmsTraningRequestService;
 
 
@@ -38,16 +42,20 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
 	@Autowired
 	private CustomUserDetailsServiceImpl userDetails;
 	
+	@Autowired
+	private INominationService iNominationService;
+	
 	@Override
-	public ResponseWrapperDto saveTrainingRequestForm(TrainingRequestFormDto formDto) {
+	public ResponseWrapperDto saveTrainingRequestForm(TrfWithNominationDto formDto) {
 		ResponseWrapperDto responseWrapperDto = new ResponseWrapperDto();
 		TrainingRequestForm trainingRequestForm = null;
-        if (formDto != null) {
+        if (formDto != null && formDto.getTrainingRequestFormDto()!=null) {
             try {
-            	trainingRequestForm = modelMapper.map(formDto, TrainingRequestForm.class);
+            	trainingRequestForm = modelMapper.map(formDto.getTrainingRequestFormDto(), TrainingRequestForm.class);
                 if (ObjectUtils.isNotEmpty(trainingRequestForm)) {
 					trainingRequestForm.setStatus(UserAccountStatusTypes.PENDING.toString());
-                	requestRepository.save(trainingRequestForm);
+					trainingRequestForm=requestRepository.save(trainingRequestForm);
+					saveNomination(formDto.getNominationList(),trainingRequestForm.getId());
                     responseWrapperDto.setMessage("Data Save Successfully..");
                 } else {
                     responseWrapperDto.setMessage("transection fail !");
@@ -196,4 +204,11 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
         return responseWrapperDto;
 	}
 	
+	private List<NominationDto> saveNomination(List<NominationDto> nominationDtos,Long trainingId) {
+		nominationDtos.stream().forEach(e->e.setTrainingId(trainingId));
+		nominationDtos.stream().forEach(e->{
+			iNominationService.saveNomination(e);
+			});
+		return nominationDtos;
+	}
 }

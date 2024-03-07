@@ -12,21 +12,27 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.aspectj.weaver.Iterators;
+import org.modelmapper.ModelMapper;
 import org.modelmapper.internal.util.Iterables;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.yash.ytms.domain.Nomination;
 import com.yash.ytms.dto.NominationDto;
+import com.yash.ytms.repository.NominationRepository;
 import com.yash.ytms.services.IServices.INominationService;
+
+import ch.qos.logback.core.model.Model;
 
 @Service
 public class NominationServiceImpl implements INominationService {
 
-	/*
-	 * @Autowired private NominationUploadRepository nominationUploadRepository;
-	 * 
-	 * @Autowired private ModelMapper modelMapper;
-	 */
+	@Autowired
+	private NominationRepository nominationUploadRepository;
+
+	@Autowired
+	private ModelMapper modelMapper;
 
 	@Override
 	public List<NominationDto> parseExcel(MultipartFile file) throws IOException {
@@ -37,7 +43,7 @@ public class NominationServiceImpl implements INominationService {
 		List<NominationDto> nominationUploadDataList = new ArrayList();
 
 		Iterator<Row> rowIterator = sheet.iterator();
-		 // Conv
+		// Conv
 		// Skip header row if exists
 		// rowIterator = rowIterator.skip(1);
 		if (rowIterator.hasNext()) {
@@ -46,7 +52,7 @@ public class NominationServiceImpl implements INominationService {
 
 		while (rowIterator.hasNext()) {
 			Row row = rowIterator.next();
-			if(row.getCell(0)==null) {
+			if (row.getCell(0) == null) {
 				break;
 			}
 
@@ -68,8 +74,6 @@ public class NominationServiceImpl implements INominationService {
 	NominationDto setNominationObject(Row row) {
 		/* Nomination nomination = new Nomination(); */
 		NominationDto nomination = new NominationDto();
-		
-		
 
 		String formattedStringValue = new DecimalFormat("#").format(row.getCell(0).getNumericCellValue());
 		nomination.setEmp_id(formattedStringValue);
@@ -83,6 +87,16 @@ public class NominationServiceImpl implements INominationService {
 
 		return nomination;
 
+	}
+
+	@Override
+	public NominationDto saveNomination(NominationDto dto) {
+		return modelMapper.map(nominationUploadRepository.save(modelMapper.map(dto, Nomination.class)),NominationDto.class);
+	}
+
+	@Override
+	public List<NominationDto> findNominationsByTrainingID(Long trainingId) {
+		return modelMapper.map(nominationUploadRepository.findAllByTrainingId(trainingId), List.class);
 	}
 
 }

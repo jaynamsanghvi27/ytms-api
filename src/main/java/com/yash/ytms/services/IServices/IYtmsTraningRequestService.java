@@ -5,10 +5,11 @@ import java.util.List;
 
 import com.yash.ytms.dto.ResponseWrapperDto;
 import com.yash.ytms.dto.TrainingRequestFormDto;
+import com.yash.ytms.dto.TrfWithNominationDto;
 
 public interface IYtmsTraningRequestService {
 
-	ResponseWrapperDto saveTrainingRequestForm(TrainingRequestFormDto formDto);
+	ResponseWrapperDto saveTrainingRequestForm(TrfWithNominationDto formDto);
 	
 	ResponseWrapperDto approveTrainingRequestForm(TrainingRequestFormDto formDto);
 

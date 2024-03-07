@@ -1,5 +1,10 @@
-package com.yash.ytms.dto;
+package com.yash.ytms.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,7 +12,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class NominationDto {
+@Entity
+@Table(name="Nominations")
+public class Nomination {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	private String emp_id;
 	private String emp_name;
 	private String emp_mail_id;
@@ -17,5 +27,5 @@ public class NominationDto {
 	private String project;
 	private String current_location;
 	private Long trainingId;
-	
+
 }
