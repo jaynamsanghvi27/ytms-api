@@ -22,7 +22,7 @@ public class NominationBulkUploadController {
 	@Autowired
 	private INominationService iNominationUploadService;
 	
-	 @PostMapping("/register/upload")
+	 @PostMapping("/register/readExcel")
 	    public List<NominationDto> bulkUpload(@RequestParam("file") MultipartFile file) {
 		List<NominationDto> nominationUploadDataList =null;
 		System.out.println("FileName : "+file.getOriginalFilename());
