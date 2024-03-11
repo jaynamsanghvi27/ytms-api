@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,6 +36,12 @@ public class NominationBulkUploadController {
         }
 	 }
 	 
+	 @PostMapping("/register/saveNomination")
+	 public NominationDto saveNomination(@RequestBody NominationDto dto) {
+		 return iNominationUploadService.saveNomination(dto);
+	 }
+	 
+	 
 	 @GetMapping("/register/getNominationListByTrainingId/{trainingId}")
 	 public List<NominationDto> getNominationListByTrainingId(@PathVariable Long trainingId){
 		 return iNominationUploadService.findNominationsByTrainingID(trainingId); 
@@ -42,6 +50,11 @@ public class NominationBulkUploadController {
 	 @GetMapping("/register/getNominationById/{nominationId}")
 	 public NominationDto getNominationById(@PathVariable Long nominationId){
 		 return iNominationUploadService.getNomiationById(nominationId);
+	 }
+	 
+	 @PutMapping("/register/update-nomination")
+	 public NominationDto updateNominationById(@RequestBody NominationDto dto) {
+		 return iNominationUploadService.saveNomination(dto);
 	 }
 	
 }

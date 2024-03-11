@@ -25,15 +25,15 @@ public class TrainingTypesMasterController {
 
 	@Autowired
 	ITrainingTypesMasterService iTrainingTypesMasterService;
-	
+
 	@GetMapping("/getTrainingTypesMasterList")
-	public List<TrainingTypesMasterDto> getTrainingTypesMasterList(){
+	public List<TrainingTypesMasterDto> getTrainingTypesMasterList() {
 		return iTrainingTypesMasterService.getTrainingTypesMasterList();
-	} 
-	
+	}
+
 	@PostMapping("/add-training-type")
 	public ResponseEntity<ResponseWrapperDto> saveTrainingType(@RequestBody TrainingTypesMasterDto dto) {
-        return new ResponseEntity<>(iTrainingTypesMasterService.saveTrainingType(dto), HttpStatus.OK);
-    }
-	
+		return new ResponseEntity<>(iTrainingTypesMasterService.saveTrainingType(dto), HttpStatus.OK);
+	}
+
 }

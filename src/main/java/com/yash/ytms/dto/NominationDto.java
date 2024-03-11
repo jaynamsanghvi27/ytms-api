@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NominationDto {
+	private Long id;
 	private String emp_id;
 	private String emp_name;
 	private String emp_mail_id;
