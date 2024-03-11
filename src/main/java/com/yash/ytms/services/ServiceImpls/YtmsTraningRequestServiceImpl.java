@@ -92,32 +92,36 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
     public ResponseWrapperDto approveTrainingRequestForm(TrainingRequestFormDto formDto) {
         ResponseWrapperDto responseWrapperDto = new ResponseWrapperDto();
         TrainingRequestForm trainingRequestForm = null;
+
         if (formDto != null) {
-            try {
-                Optional<TrainingRequestForm> oldformDtoOpt = requestRepository.findById(formDto.getId());
-                if (oldformDtoOpt.isPresent()) {
-                    TrainingRequestForm oldformDto = oldformDtoOpt.get();
-                    oldformDto.setActualStartDate(formDto.getActualStartDate());
-                    oldformDto.setActualEndDate(formDto.getActualEndDate());
-                    oldformDto.setStatus(UserAccountStatusTypes.APPROVED.toString());
-                    oldformDto.setDeclinedMessage("NA");
-                    trainingRequestForm = modelMapper.map(oldformDto, TrainingRequestForm.class);
-                    if (ObjectUtils.isNotEmpty(trainingRequestForm)) {
-                        requestRepository.save(trainingRequestForm);
-                        responseWrapperDto.setMessage("Data Save Successfully..");
-                        emailUtil.sendNotificationMailForRequestApproved(trainingRequestForm.getUserName(), formDto.getFileName());
-                    } else {
-                        responseWrapperDto.setMessage("transection fail !");
+            if (formDto.getActualEndDate().after(formDto.getActualStartDate())) {
+                try {
+                    Optional<TrainingRequestForm> oldformDtoOpt = requestRepository.findById(formDto.getId());
+                    if (oldformDtoOpt.isPresent()) {
+                        TrainingRequestForm oldformDto = oldformDtoOpt.get();
+                        oldformDto.setActualStartDate(formDto.getActualStartDate());
+                        oldformDto.setActualEndDate(formDto.getActualEndDate());
+                        oldformDto.setStatus(UserAccountStatusTypes.APPROVED.toString());
+                        oldformDto.setDeclinedMessage("NA");
+                        trainingRequestForm = modelMapper.map(oldformDto, TrainingRequestForm.class);
+                        if (ObjectUtils.isNotEmpty(trainingRequestForm)) {
+                            requestRepository.save(trainingRequestForm);
+                            responseWrapperDto.setMessage("Data Save Successfully..");
+                            emailUtil.sendNotificationMailForRequestApproved(trainingRequestForm.getUserName(), formDto.getFileName());
+                        } else {
+                            responseWrapperDto.setMessage("transection fail !");
+                        }
                     }
+
+                } catch (Exception e) {
+                    responseWrapperDto.setMessage("unable to save training data !");
                 }
 
-            } catch (Exception e) {
-                responseWrapperDto.setMessage("unable to save training data !");
+            } else {
+                responseWrapperDto.setMessage("can not select End date after start date! ");
             }
-
-        } else {
+        }else {
             responseWrapperDto.setMessage("Training Request Form is empty !");
-
         }
         return responseWrapperDto;
     }
