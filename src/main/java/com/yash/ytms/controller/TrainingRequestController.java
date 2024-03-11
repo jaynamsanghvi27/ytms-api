@@ -31,43 +31,43 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/register")
 public class TrainingRequestController {
-	//getTrainingRequestFormById
+    //getTrainingRequestFormById
 
     public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-	@Autowired
+    @Autowired
     private IYtmsTraningRequestService traningRequestService;
-	
-	@PostMapping("/saveTrainingRequestForm")
-	public ResponseEntity<ResponseWrapperDto> saveTrainingRequestForm(@RequestBody TrfWithNominationDto trfNominationDto) {
+
+    @PostMapping("/saveTrainingRequestForm")
+    public ResponseEntity<ResponseWrapperDto> saveTrainingRequestForm(@RequestBody TrfWithNominationDto trfNominationDto) {
         return new ResponseEntity<>(traningRequestService.saveTrainingRequestForm(trfNominationDto), HttpStatus.OK);
     }
-	
-	@GetMapping("/getTrainingRequestForm")
-	public List<TrainingRequestFormDto> getTrainingRequestForm(Principal principal){
-		return traningRequestService.getTrainingRequestForm(principal);
-	}
-	//updateTrainingRequestForm
-	@PutMapping("/updateTrainingRequestForm")
+
+    @GetMapping("/getTrainingRequestForm")
+    public List<TrainingRequestFormDto> getTrainingRequestForm(Principal principal) {
+        return traningRequestService.getTrainingRequestForm(principal);
+    }
+
+    //updateTrainingRequestForm
+    @PutMapping("/updateTrainingRequestForm")
     public ResponseEntity<ResponseWrapperDto> approveTrainingRequestForm(@RequestBody TrainingRequestFormDto trainingRequestFormDto) {
         return new ResponseEntity<>(traningRequestService.approveTrainingRequestForm(trainingRequestFormDto), HttpStatus.OK);
     }
 
-	@PutMapping("/decline-trf")
+    @PutMapping("/decline-trf")
     public ResponseEntity<ResponseWrapperDto> declineTrainingRequestForm(@RequestBody TrainingRequestFormDto trainingRequestFormDto) {
         return new ResponseEntity<>(traningRequestService.declineTrainingRequestForm(trainingRequestFormDto), HttpStatus.OK);
     }
 
-	@GetMapping("/getTrainingRequestFormById/{trainingID}")
-	public TrainingRequestFormDto getTrainingRequestForm(@PathVariable long trainingID){
-		return traningRequestService.getTrainingRequestFormById(trainingID);
-	}
+    @GetMapping("/getTrainingRequestFormById/{trainingID}")
+    public TrainingRequestFormDto getTrainingRequestForm(@PathVariable long trainingID) {
+        return traningRequestService.getTrainingRequestFormById(trainingID);
+    }
 
-	@PutMapping("/editTrainingRequestForm")
+    @PutMapping("/editTrainingRequestForm")
     public ResponseEntity<ResponseWrapperDto> editTrainingRequestForm(@RequestBody TrainingRequestFormDto trainingRequestFormDto) {
         return new ResponseEntity<>(traningRequestService.editTrainingRequestForm(trainingRequestFormDto), HttpStatus.OK);
     }
-}
-    //@PostMapping("/upload")
+
     @PostMapping(value = "/upload", headers = ("content-type=multipart/*"), consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
         String message = "";
@@ -87,9 +87,10 @@ public class TrainingRequestController {
         message = "Please upload an excel file!";
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(message));
     }
+
     public static boolean hasExcelFormat(MultipartFile file) {
 
-        if(!TYPE.equals(file.getContentType())) {
+        if (!TYPE.equals(file.getContentType())) {
             return false;
         }
         return true;

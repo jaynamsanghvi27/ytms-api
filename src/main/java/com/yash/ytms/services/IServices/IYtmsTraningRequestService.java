@@ -1,4 +1,4 @@
-package  com.yash.ytms.services.IServices;
+package com.yash.ytms.services.IServices;
 
 import java.io.File;
 import java.security.Principal;
@@ -12,15 +12,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface IYtmsTraningRequestService {
 
-	ResponseWrapperDto saveTrainingRequestForm(TrfWithNominationDto formDto);
-	
-	ResponseWrapperDto approveTrainingRequestForm(TrainingRequestFormDto formDto);
-	ResponseWrapperDto uploadFile( MultipartFile file);
-	ResponseWrapperDto declineTrainingRequestForm(TrainingRequestFormDto formDto);
+    ResponseWrapperDto saveTrainingRequestForm(TrfWithNominationDto formDto);
 
-	List<TrainingRequestFormDto> getTrainingRequestForm(Principal principal);
+    ResponseWrapperDto approveTrainingRequestForm(TrainingRequestFormDto formDto);
 
-	TrainingRequestFormDto getTrainingRequestFormById(long trainingId);
+    ResponseWrapperDto declineTrainingRequestForm(TrainingRequestFormDto formDto);
 
-	ResponseWrapperDto editTrainingRequestForm(TrainingRequestFormDto formDto);
+    List<TrainingRequestFormDto> getTrainingRequestForm(Principal principal);
+
+    TrainingRequestFormDto getTrainingRequestFormById(long trainingId);
+
+    ResponseWrapperDto editTrainingRequestForm(TrainingRequestFormDto formDto);
+
+    ResponseWrapperDto uploadFile(MultipartFile file);
 }
