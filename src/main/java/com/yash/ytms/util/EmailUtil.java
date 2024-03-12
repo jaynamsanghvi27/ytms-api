@@ -62,8 +62,7 @@ public class EmailUtil {
     public void sendNotificationMailForTechnicalManage(String email) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
-        //mimeMessageHelper.setTo(email);
-        mimeMessageHelper.setTo("rahulsonidiary@gmail.com");
+        mimeMessageHelper.setTo(email);
         mimeMessageHelper.setSubject("Notification Mail");
         mimeMessageHelper.setText(email + " has been submitted a request, if you want to Approved/Reject, " + "Please go to dashboard and take action ");
 
@@ -79,7 +78,7 @@ public class EmailUtil {
         });
         try {
             Message message = new MimeMessage(session);
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("rahulsonidiary@gmail.com "));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
             message.setSubject("Notification Mail ");
             // Create the email body
             BodyPart messageBodyPart = new MimeBodyPart();
@@ -112,8 +111,7 @@ public class EmailUtil {
     public void sendNotificationMailForRequestReject(String email) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
-        //mimeMessageHelper.setTo(email);
-        mimeMessageHelper.setTo("rahulsonidiary@gmail.com");
+        mimeMessageHelper.setTo(email);
         mimeMessageHelper.setSubject("Notification Mail");
         mimeMessageHelper.setText(email + " request has been Rejected");
 

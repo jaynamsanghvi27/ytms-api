@@ -16,5 +16,7 @@ public interface INominationService {
 	List<NominationDto> findNominationsByTrainingID(Long trainingId);
 	
 	NominationDto getNomiationById(Long id);
+	
+	void deleteNominationById(Long id);
 
 }

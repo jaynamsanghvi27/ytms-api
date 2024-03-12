@@ -167,6 +167,7 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
             } else {
                 forms = requestRepository.findByUserName(userName);
             }
+            System.out.println(forms);
             requestFormList = modelMapper.map(forms, List.class);
         } catch (Exception e) {
             // TODO: handle exception

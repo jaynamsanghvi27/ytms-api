@@ -104,4 +104,9 @@ public class NominationServiceImpl implements INominationService {
 		return modelMapper.map(nominationUploadRepository.getById(id), NominationDto.class);
 	}
 
+	@Override
+	public void deleteNominationById(Long id) {
+		nominationUploadRepository.deleteById(id);
+	}
+
 }

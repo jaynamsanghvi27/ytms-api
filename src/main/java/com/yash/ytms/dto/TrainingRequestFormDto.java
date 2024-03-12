@@ -44,4 +44,6 @@ public class TrainingRequestFormDto {
 	private int noOfParticipant;
 
 	private String fileName;
+	
+	private int noOfActualParticipant;
 }

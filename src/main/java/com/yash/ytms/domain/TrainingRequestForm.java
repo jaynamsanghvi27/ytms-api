@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -125,6 +127,9 @@ public class TrainingRequestForm {
 
 	//to be used only in case of request declined
 	private String declinedMessage;
+	
+	@Formula(value = "(SELECT COUNT(*) FROM Nominations v WHERE v.training_id=id)")
+	private int noOfActualParticipant;
 
 	/** Pre-persist action to set the created date. */
 
