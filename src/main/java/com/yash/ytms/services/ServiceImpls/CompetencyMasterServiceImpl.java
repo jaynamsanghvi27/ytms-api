@@ -71,7 +71,7 @@ public class CompetencyMasterServiceImpl implements ICompetencyMasterService {
         	allCompetency.add(new CompetencyMasterDto(2, "REACT", true));
         	allCompetency.add(new CompetencyMasterDto(3, "UI-HTML", true));
         	allCompetency.add(new CompetencyMasterDto(4, "UI-CSS", true));
-        	allCompetency.add(new CompetencyMasterDto(5, "ANGULER", true));
+        	allCompetency.add(new CompetencyMasterDto(5, "ANGULAR", true));
         	allCompetency.add(new CompetencyMasterDto(6, "DotNet", true));
 
         	allCompetency.forEach(this :: createCompetencyMaster);

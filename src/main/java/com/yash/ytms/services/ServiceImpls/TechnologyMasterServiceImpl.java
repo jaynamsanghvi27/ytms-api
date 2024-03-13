@@ -73,7 +73,7 @@ public class TechnologyMasterServiceImpl implements ITechnologyMasterService {
         	allTechnology.add(new TechnologyMasterDto(2, "REACT", "react", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), true));
         	allTechnology.add(new TechnologyMasterDto(3, "UI-HTML", "html", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), true));
         	allTechnology.add(new TechnologyMasterDto(4, "UI-CSS", "css", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), true));
-        	allTechnology.add(new TechnologyMasterDto(5, "ANGULER", "anguler", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), true));
+        	allTechnology.add(new TechnologyMasterDto(5, "ANGULAR", "angular", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), true));
         	allTechnology.add(new TechnologyMasterDto(6, "DotNet", "c#", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), true));
 
         	allTechnology.forEach(this :: createTechnologyMaster);
