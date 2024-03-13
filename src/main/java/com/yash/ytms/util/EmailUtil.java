@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.Base64;
+import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -59,14 +60,24 @@ public class EmailUtil {
         javaMailSender.send(mimeMessage);
     }
 
-    public void sendNotificationMailForTechnicalManage(String email) throws MessagingException {
+    public void sendNotificationMailForTechnicalManage(List<String> usersList) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
-        mimeMessageHelper.setTo(email);
+        String[] to =  createStringArray(usersList);
+        mimeMessageHelper.setTo(to);
         mimeMessageHelper.setSubject("Notification Mail");
-        mimeMessageHelper.setText(email + " has been submitted a request, if you want to Approved/Reject, " + "Please go to dashboard and take action ");
+        mimeMessageHelper.setText(" has been submitted a request, if you want to Approved/Reject, " + "Please go to dashboard and take action ");
 
         javaMailSender.send(mimeMessage);
+    }
+
+    private String[] createStringArray(List<String> usersList) {
+        String[] emailIds = new String[usersList.size()];
+
+        for (int i = 0; i < usersList.size(); i++) {
+            emailIds[i] = usersList.get(i);
+        }
+        return  emailIds;
     }
 
     public void sendNotificationMailForRequestApproved(String email, String fileName) throws MessagingException {

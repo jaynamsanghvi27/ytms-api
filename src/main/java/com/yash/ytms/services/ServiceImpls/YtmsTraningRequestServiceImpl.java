@@ -8,9 +8,12 @@ import java.util.List;
 import java.util.Optional;
 
 import com.yash.ytms.constants.UserAccountStatusTypes;
+import com.yash.ytms.domain.YtmsUser;
+import com.yash.ytms.repository.YtmsUserRepository;
 import com.yash.ytms.services.IServices.IYtmsTraningRequestService;
 import com.yash.ytms.util.EmailUtil;
 import com.yash.ytms.util.ResponseMessage;
+import jakarta.mail.MessagingException;
 import jakarta.mail.Multipart;
 import org.apache.commons.lang3.ObjectUtils;
 import org.modelmapper.ModelMapper;
@@ -56,6 +59,9 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
     @Autowired
     private EmailUtil emailUtil;
 
+    @Autowired
+    private YtmsUserRepository ytmsUserRepository;
+
     @Override
     public ResponseWrapperDto saveTrainingRequestForm(TrfWithNominationDto formDto) {
         ResponseWrapperDto responseWrapperDto = new ResponseWrapperDto();
@@ -68,17 +74,23 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
                     trainingRequestForm = requestRepository.save(trainingRequestForm);
                     saveNomination(formDto.getNominationList(), trainingRequestForm.getId());
                     responseWrapperDto.setMessage("Data Save Successfully..");
-                    emailUtil.sendNotificationMailForTechnicalManage(trainingRequestForm.getUserName());
+                    List<String> usersList = this.ytmsUserRepository.findAllTechnicalManager();
+                    if (ObjectUtils.isNotEmpty(usersList)) {
+                        try {
+                            emailUtil.sendNotificationMailForTechnicalManage(usersList);
+                        } catch (MessagingException ex) {
+                            responseWrapperDto.setMessage("unable send mail to technical manager ! " + ex.getMessage());
+                        }
+                    }
+
                 } else {
                     responseWrapperDto.setMessage("transection fail !");
                 }
             } catch (Exception e) {
                 responseWrapperDto.setMessage("unable to save training data !");
             }
-
         } else {
             responseWrapperDto.setMessage("Training Request Form is empty !");
-
         }
         return responseWrapperDto;
     }
