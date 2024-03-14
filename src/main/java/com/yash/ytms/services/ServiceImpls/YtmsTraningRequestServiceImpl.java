@@ -77,7 +77,7 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
                     List<String> usersList = this.ytmsUserRepository.findAllTechnicalManager();
                     if (ObjectUtils.isNotEmpty(usersList)) {
                         try {
-                            emailUtil.sendNotificationMailForTechnicalManage(usersList);
+                            emailUtil.sendNotificationMailForTechnicalManage(usersList,trainingRequestForm.getUserName());
                         } catch (MessagingException ex) {
                             responseWrapperDto.setMessage("unable send mail to technical manager ! " + ex.getMessage());
                         }
