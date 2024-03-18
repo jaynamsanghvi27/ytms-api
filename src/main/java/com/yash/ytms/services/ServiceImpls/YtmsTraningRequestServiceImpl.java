@@ -20,6 +20,7 @@ import jakarta.mail.Multipart;
 import org.apache.commons.lang3.ObjectUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Service;
@@ -65,6 +66,9 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
     private YtmsUserRepository ytmsUserRepository;
     @Autowired
     private StoreFileNameInRepository storeFileNameInRepository;
+
+    @Value("${attachFile.filePath}")
+    private String filePath;
 
     @Override
     public ResponseWrapperDto saveTrainingRequestForm(TrfWithNominationDto formDto) {
@@ -251,16 +255,21 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
         String fileName = file.getOriginalFilename();
         FileName fName = new FileName();
         try {
-            file.transferTo(new File("D:\\Internal Project\\" + fileName));
+            File f = new File(filePath);
+            if (f.exists() && f.isDirectory()) {
+                file.transferTo(new File(filePath + fileName));
+            } else {
+                f.mkdir();
+                file.transferTo(new File(filePath + fileName));
+            }
+
             if (fileName.indexOf(".") > 0)
                 fileName = fileName.substring(0, fileName.lastIndexOf("."));
             fName.setFileName(fileName);
             responseWrapperDto.setMessage("File upload successfully ");
             List<String> listOfFileName = storeFileNameInRepository.findAllFileName();
-            if (ObjectUtils.isNotEmpty(listOfFileName)) {
-                if (!listOfFileName.contains(fileName)) {
-                    storeFileNameInRepository.save(fName);
-                }
+            if (!listOfFileName.contains(fileName)) {
+                storeFileNameInRepository.save(fName);
             }
         } catch (IOException e) {
             responseWrapperDto.setMessage("Fail to upload excel in to folder: " + e.getMessage());
@@ -269,7 +278,7 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
         return responseWrapperDto;
     }
 
-    public List<String> getFileName(){
+    public List<String> getFileName() {
         return storeFileNameInRepository.findAllFileName();
     }
 }
