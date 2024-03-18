@@ -25,4 +25,6 @@ public interface IYtmsTraningRequestService {
     ResponseWrapperDto editTrainingRequestForm(TrainingRequestFormDto formDto);
 
     ResponseWrapperDto uploadFile(MultipartFile file);
+
+    List<String> getFileName();
 }
