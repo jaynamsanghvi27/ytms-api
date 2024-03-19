@@ -95,4 +95,9 @@ public class TrainingRequestController {
         }
         return true;
     }
+
+    @GetMapping("/getFileName")
+    public List<String> getFileName(Principal principal) {
+        return traningRequestService.getFileName();
+    }
 }
