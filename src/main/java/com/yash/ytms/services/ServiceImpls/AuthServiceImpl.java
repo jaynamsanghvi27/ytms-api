@@ -1,5 +1,13 @@
 package com.yash.ytms.services.ServiceImpls;
 
+import org.apache.commons.lang3.StringUtils;
+import org.modelmapper.internal.util.Assert;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.stereotype.Service;
+
 import com.yash.ytms.constants.AppConstants;
 import com.yash.ytms.constants.RequestStatusTypes;
 import com.yash.ytms.constants.UserAccountStatusTypes;
@@ -10,13 +18,8 @@ import com.yash.ytms.security.jwt.JwtTokenHelper;
 import com.yash.ytms.security.userdetails.CustomUserDetails;
 import com.yash.ytms.security.userdetails.CustomUserDetailsServiceImpl;
 import com.yash.ytms.services.IServices.IAuthService;
-import org.apache.commons.lang3.StringUtils;
-import org.modelmapper.internal.util.Assert;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Project Name - ytms-api
@@ -26,6 +29,7 @@ import org.springframework.stereotype.Service;
  * @author - yash.raj
  * @since - 25-01-2024
  */
+@Slf4j
 @Service
 public class AuthServiceImpl implements IAuthService {
 
@@ -84,7 +88,8 @@ public class AuthServiceImpl implements IAuthService {
         try {
             this.authenticationManager.authenticate(usernamePasswordAuthenticationToken);
         } catch (BadCredentialsException credentialsException) {
-            throw new ApplicationException("Invalid username or password");
+        	log.error("Invalid username or password",
+             new ApplicationException("Invalid username or password"));
         }
     }
 }

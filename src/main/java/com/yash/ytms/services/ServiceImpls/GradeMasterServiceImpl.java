@@ -20,9 +20,12 @@ import com.yash.ytms.exception.ApplicationException;
 import com.yash.ytms.repository.GradeMasterRepository;
 import com.yash.ytms.services.IServices.IGradeMasterService;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 
  */
+@Slf4j
 @Service
 public class GradeMasterServiceImpl implements IGradeMasterService {
 	
@@ -54,7 +57,8 @@ public class GradeMasterServiceImpl implements IGradeMasterService {
 	                    .modelMapper
 	                    .map(GradeMaster, GradeMasterDto.class);
 	        } else {
-	            throw new ApplicationException("Grade Master are empty or null");
+	        	log.error("Grade Master are empty or null",
+	             new ApplicationException("Grade Master are empty or null"));
 	        }
 
 	        return GradeMasterDto;

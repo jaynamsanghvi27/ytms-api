@@ -20,9 +20,12 @@ import com.yash.ytms.exception.ApplicationException;
 import com.yash.ytms.repository.LocationMasterRepository;
 import com.yash.ytms.services.IServices.ILocationMasterService;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 
  */
+@Slf4j
 @Service
 public class LocationMasterServiceImpl implements ILocationMasterService {
 	
@@ -54,7 +57,8 @@ public class LocationMasterServiceImpl implements ILocationMasterService {
 	                    .modelMapper
 	                    .map(LocationMaster, LocationMasterDto.class);
 	        } else {
-	            throw new ApplicationException("Location Master are empty or null");
+	        	log.error("Location Master are empty or null",
+	            new ApplicationException("Location Master are empty or null"));
 	        }
 
 	        return LocationMasterDto;

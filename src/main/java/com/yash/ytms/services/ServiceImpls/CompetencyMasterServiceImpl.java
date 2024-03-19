@@ -20,9 +20,12 @@ import com.yash.ytms.exception.ApplicationException;
 import com.yash.ytms.repository.CompetencyMasterRepository;
 import com.yash.ytms.services.IServices.ICompetencyMasterService;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 
  */
+@Slf4j
 @Service
 public class CompetencyMasterServiceImpl implements ICompetencyMasterService {
 	@Autowired
@@ -52,7 +55,8 @@ public class CompetencyMasterServiceImpl implements ICompetencyMasterService {
                     .modelMapper
                     .map(competencyMaster, CompetencyMasterDto.class);
         } else {
-            throw new ApplicationException("Competency Master are empty or null");
+        	log.error("Competency Master are empty or null",
+        			new ApplicationException("Competency Master are empty or null"));
         }
 
         return competencyMasterDto;

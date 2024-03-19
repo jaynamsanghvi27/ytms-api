@@ -21,9 +21,12 @@ import com.yash.ytms.exception.ApplicationException;
 import com.yash.ytms.repository.TechnologyMasterRepository;
 import com.yash.ytms.services.IServices.ITechnologyMasterService;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 
  */
+@Slf4j
 @Service
 public class TechnologyMasterServiceImpl implements ITechnologyMasterService {
 
@@ -54,7 +57,8 @@ public class TechnologyMasterServiceImpl implements ITechnologyMasterService {
                     .modelMapper
                     .map(technologyMaster, TechnologyMasterDto.class);
         } else {
-            throw new ApplicationException("Technology Master are empty or null");
+        	log.error("Technology Master are empty or null",
+       			 new ApplicationException("Technology Master are empty or null"));
         }
 
         return technologyMasterDto;
@@ -94,6 +98,7 @@ public class TechnologyMasterServiceImpl implements ITechnologyMasterService {
 					responseWrapperDto.setMessage("transection fail !");
 				}
 			} catch (Exception e) {
+				log.info("unable to save data !");
 				responseWrapperDto.setMessage("unable to save data !");
 			}
 

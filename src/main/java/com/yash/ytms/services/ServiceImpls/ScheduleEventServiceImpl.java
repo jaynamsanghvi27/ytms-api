@@ -11,6 +11,9 @@ import com.yash.ytms.repository.ScheduleEventRepository;
 import com.yash.ytms.services.IServices.IScheduleEventService;
 import com.yash.ytms.services.IServices.IYtmsUserService;
 import com.yash.ytms.util.DateTimeUtil;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
@@ -26,6 +29,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class ScheduleEventServiceImpl implements IScheduleEventService {
 
