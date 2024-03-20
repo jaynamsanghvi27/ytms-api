@@ -236,4 +236,18 @@ public class YtmsUserServiceImpl implements IYtmsUserService {
         } else
             throw new ApplicationException("No Trainers found !");
     }
+    
+    @Override
+    public List<YtmsUserDto> findByUserRoleId(Long roleId) {
+    	List<YtmsUser> allTrainers = this.userRepository.findByUserRoleRoleId(roleId);
+        if (!allTrainers.isEmpty()) {
+            return allTrainers
+                    .stream()
+                    .map(yur -> this
+                            .modelMapper
+                            .map(yur, YtmsUserDto.class))
+                    .toList();
+        } else
+            throw new ApplicationException("No Trainers found !");
+    }
 }

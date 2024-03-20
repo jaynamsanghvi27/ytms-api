@@ -1,10 +1,10 @@
 package com.yash.ytms.services.IServices;
 
-import com.yash.ytms.dto.ResponseWrapperDto;
-import com.yash.ytms.dto.YtmsUserDto;
-
 import java.util.List;
 import java.util.Map;
+
+import com.yash.ytms.dto.ResponseWrapperDto;
+import com.yash.ytms.dto.YtmsUserDto;
 
 /**
  * Project Name - ytms-api
@@ -33,4 +33,6 @@ public interface IYtmsUserService {
     ResponseWrapperDto changePassword(Map<String, String> map);
 
     List<YtmsUserDto> getAllTrainers();
+    
+    List<YtmsUserDto> findByUserRoleId(Long roleId);
 }
