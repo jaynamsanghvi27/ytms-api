@@ -3,6 +3,7 @@ package com.yash.ytms.services.IServices;
 import com.yash.ytms.dto.ResponseWrapperDto;
 import com.yash.ytms.dto.YtmsUserDto;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -33,4 +34,7 @@ public interface IYtmsUserService {
     ResponseWrapperDto changePassword(Map<String, String> map);
 
     List<YtmsUserDto> getAllTrainers();
+    
+    YtmsUserDto getUserByPrincipal(Principal principal);
+    
 }
