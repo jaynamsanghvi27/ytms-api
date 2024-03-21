@@ -115,8 +115,9 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
                         TrainingRequestForm oldformDto = oldformDtoOpt.get();
                         oldformDto.setActualStartDate(formDto.getActualStartDate());
                         oldformDto.setActualEndDate(formDto.getActualEndDate());
+                        oldformDto.setTrainer(formDto.getTrainer());
                         oldformDto.setStatus(UserAccountStatusTypes.APPROVED.toString());
-                        oldformDto.setDeclinedMessage("NA");
+                        //oldformDto.setDeclinedMessage("NA");
                         trainingRequestForm = modelMapper.map(oldformDto, TrainingRequestForm.class);
                         if (ObjectUtils.isNotEmpty(trainingRequestForm)) {
                             requestRepository.save(trainingRequestForm);
