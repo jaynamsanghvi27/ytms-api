@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -73,4 +74,13 @@ public class UsersController {
         List<YtmsUserDto> allTrainers = this.userService.getAllTrainers();
         return new ResponseEntity<>(allTrainers, HttpStatus.OK);
     }
-}
+    
+    @GetMapping("/get/user")
+    public ResponseEntity <YtmsUserDto> getUsers(Principal principal) 
+    {
+      return new ResponseEntity<>(userService.getUserByPrincipal(principal), HttpStatus.OK);
+    }
+    }
+        
+
+

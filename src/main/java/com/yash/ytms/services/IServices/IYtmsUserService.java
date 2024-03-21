@@ -1,5 +1,6 @@
 package com.yash.ytms.services.IServices;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -35,4 +36,7 @@ public interface IYtmsUserService {
     List<YtmsUserDto> getAllTrainers();
     
     List<YtmsUserDto> findByUserRoleId(Long roleId);
+    
+    YtmsUserDto getUserByPrincipal(Principal principal);
+    
 }
