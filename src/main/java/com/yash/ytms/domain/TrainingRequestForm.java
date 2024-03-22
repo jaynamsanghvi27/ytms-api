@@ -122,6 +122,10 @@ public class TrainingRequestForm {
 //	@Transient
 
 	private String userName;
+
+	@Column(columnDefinition="String default 'Planned'")
+	private String trainingStatus;
+
 	
 	private int noOfParticipant;
 
