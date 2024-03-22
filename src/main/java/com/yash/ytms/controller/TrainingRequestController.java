@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.yash.ytms.services.IServices.IYtmsTraningRequestService;
+import com.yash.ytms.services.IServices.IYtmsUserService;
 import com.yash.ytms.util.ResponseMessage;
 
 import org.slf4j.Logger;
@@ -27,6 +28,7 @@ import com.yash.ytms.dto.NominationDto;
 import com.yash.ytms.dto.ResponseWrapperDto;
 import com.yash.ytms.dto.TrainingRequestFormDto;
 import com.yash.ytms.dto.TrfWithNominationDto;
+import com.yash.ytms.dto.YtmsUserDto;
 import com.yash.ytms.services.IServices.IYtmsTraningRequestService;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -39,6 +41,9 @@ public class TrainingRequestController {
     public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     @Autowired
     private IYtmsTraningRequestService traningRequestService;
+    
+    @Autowired
+    private IYtmsUserService userService;
 
     final Logger LOGGER = LoggerFactory.getLogger(TrainingRequestController.class);
     
@@ -108,5 +113,20 @@ public class TrainingRequestController {
             return false;
         }
         return true;
+    }
+
+    @GetMapping("/getFileName")
+    public List<String> getFileName(Principal principal) {
+        return traningRequestService.getFileName();
+    }
+    
+    @GetMapping("/getTrainerList")
+    public List<YtmsUserDto> getTrainerList() {
+        return userService.getAllTrainers();
+    }
+    
+    @GetMapping("/getRequesterList")
+    public List<YtmsUserDto> getRequesterList() {
+        return userService.findByUserRoleId(501L);
     }
 }

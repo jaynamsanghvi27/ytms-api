@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 import com.yash.ytms.constants.UserAccountStatusTypes;
+import com.yash.ytms.domain.FileName;
 import com.yash.ytms.domain.YtmsUser;
+import com.yash.ytms.repository.StoreFileNameInRepository;
 import com.yash.ytms.repository.YtmsUserRepository;
 import com.yash.ytms.services.IServices.IYtmsTraningRequestService;
 import com.yash.ytms.util.EmailUtil;
@@ -18,6 +20,7 @@ import jakarta.mail.Multipart;
 import org.apache.commons.lang3.ObjectUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Service;
@@ -61,6 +64,11 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
 
     @Autowired
     private YtmsUserRepository ytmsUserRepository;
+    @Autowired
+    private StoreFileNameInRepository storeFileNameInRepository;
+
+    @Value("${attachFile.filePath}")
+    private String filePath;
 
     @Override
     public ResponseWrapperDto saveTrainingRequestForm(TrfWithNominationDto formDto) {
@@ -77,7 +85,7 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
                     List<String> usersList = this.ytmsUserRepository.findAllTechnicalManager();
                     if (ObjectUtils.isNotEmpty(usersList)) {
                         try {
-                            emailUtil.sendNotificationMailForTechnicalManage(usersList);
+                            emailUtil.sendNotificationMailForTechnicalManage(usersList, trainingRequestForm.getUserName());
                         } catch (MessagingException ex) {
                             responseWrapperDto.setMessage("unable send mail to technical manager ! " + ex.getMessage());
                         }
@@ -107,8 +115,9 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
                         TrainingRequestForm oldformDto = oldformDtoOpt.get();
                         oldformDto.setActualStartDate(formDto.getActualStartDate());
                         oldformDto.setActualEndDate(formDto.getActualEndDate());
+                        oldformDto.setTrainer(formDto.getTrainer());
                         oldformDto.setStatus(UserAccountStatusTypes.APPROVED.toString());
-                        oldformDto.setDeclinedMessage("NA");
+                        //oldformDto.setDeclinedMessage("NA");
                         trainingRequestForm = modelMapper.map(oldformDto, TrainingRequestForm.class);
                         if (ObjectUtils.isNotEmpty(trainingRequestForm)) {
                             requestRepository.save(trainingRequestForm);
@@ -246,9 +255,24 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
     public ResponseWrapperDto uploadFile(MultipartFile file) {
         ResponseWrapperDto responseWrapperDto = new ResponseWrapperDto();
         String fileName = file.getOriginalFilename();
+        FileName fName = new FileName();
         try {
-            file.transferTo(new File("D:\\Internal Project\\" + fileName));
+            File f = new File(filePath);
+            if (f.exists() && f.isDirectory()) {
+                file.transferTo(new File(filePath + fileName));
+            } else {
+                f.mkdir();
+                file.transferTo(new File(filePath + fileName));
+            }
+
+            if (fileName.indexOf(".") > 0)
+                fileName = fileName.substring(0, fileName.lastIndexOf("."));
+            fName.setFileName(fileName);
             responseWrapperDto.setMessage("File upload successfully ");
+            List<String> listOfFileName = storeFileNameInRepository.findAllFileName();
+            if (!listOfFileName.contains(fileName)) {
+                storeFileNameInRepository.save(fName);
+            }
         } catch (IOException e) {
             responseWrapperDto.setMessage("Fail to upload excel in to folder: " + e.getMessage());
 
@@ -256,4 +280,7 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
         return responseWrapperDto;
     }
 
+    public List<String> getFileName() {
+        return storeFileNameInRepository.findAllFileName();
+    }
 }

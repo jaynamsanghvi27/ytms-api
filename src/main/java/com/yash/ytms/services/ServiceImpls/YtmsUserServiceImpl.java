@@ -1,5 +1,19 @@
 package com.yash.ytms.services.ServiceImpls;
 
+import java.security.Principal;
+import java.util.Base64;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.yash.ytms.constants.RequestStatusTypes;
 import com.yash.ytms.constants.UserAccountStatusTypes;
 import com.yash.ytms.constants.UserRoleTypes;
@@ -13,19 +27,8 @@ import com.yash.ytms.security.userdetails.CustomUserDetails;
 import com.yash.ytms.services.IServices.IUserRoleService;
 import com.yash.ytms.services.IServices.IYtmsUserService;
 import com.yash.ytms.util.EmailUtil;
-import jakarta.mail.MessagingException;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
+import jakarta.mail.MessagingException;
 
 /**
  * Project Name - ytms-api
@@ -249,4 +252,26 @@ public class YtmsUserServiceImpl implements IYtmsUserService {
         } else
             throw new ApplicationException("No Trainers found !");
     }
+    
+    @Override
+    public List<YtmsUserDto> findByUserRoleId(Long roleId) {
+    	List<YtmsUser> allTrainers = this.userRepository.findByUserRoleRoleId(roleId);
+        if (!allTrainers.isEmpty()) {
+            return allTrainers
+                    .stream()
+                    .map(yur -> this
+                            .modelMapper
+                            .map(yur, YtmsUserDto.class))
+                    .toList();
+        } else
+            throw new ApplicationException("No Trainers found !");
+    }
+
+	@Override
+	public YtmsUserDto getUserByPrincipal(Principal principal) {
+		// TODO Auto-generated method stub
+		final String userName = principal.getName();
+		YtmsUserDto userDto = getUserByEmailAdd(userName);
+		return userDto;
+	}
 }

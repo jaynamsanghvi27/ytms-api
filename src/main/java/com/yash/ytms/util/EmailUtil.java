@@ -67,13 +67,13 @@ public class EmailUtil {
         javaMailSender.send(mimeMessage);
     }
 
-    public void sendNotificationMailForTechnicalManage(List<String> usersList) throws MessagingException {
+    public void sendNotificationMailForTechnicalManage(List<String> usersList,String email) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
         String[] to =  createStringArray(usersList);
         mimeMessageHelper.setTo(to);
         mimeMessageHelper.setSubject("Notification Mail");
-        mimeMessageHelper.setText(" has been submitted a request, if you want to Approved/Reject, " + "Please go to dashboard and take action ");
+        mimeMessageHelper.setText(email+" has been submitted a request, if you want to Approved/Reject, " + "Please go to dashboard and take action ");
 
         javaMailSender.send(mimeMessage);
     }

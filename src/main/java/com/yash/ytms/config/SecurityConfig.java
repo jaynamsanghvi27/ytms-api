@@ -98,7 +98,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth
                             .requestMatchers("/register/**").permitAll()
+                            .requestMatchers("/ytmscli/**").permitAll()
                             .requestMatchers("/login/**").permitAll()
+                            .requestMatchers("/calendar/**").permitAll()
                             .requestMatchers("/users/forgotPassword").permitAll()
                             .requestMatchers("/users/resetPassword").permitAll()
                             .anyRequest().authenticated();
