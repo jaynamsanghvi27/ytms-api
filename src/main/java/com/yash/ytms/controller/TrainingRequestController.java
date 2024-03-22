@@ -7,6 +7,9 @@ import java.util.Map;
 import com.yash.ytms.services.IServices.IYtmsTraningRequestService;
 import com.yash.ytms.services.IServices.IYtmsUserService;
 import com.yash.ytms.util.ResponseMessage;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,35 +45,43 @@ public class TrainingRequestController {
     @Autowired
     private IYtmsUserService userService;
 
+    final Logger LOGGER = LoggerFactory.getLogger(TrainingRequestController.class);
+    
     @PostMapping("/saveTrainingRequestForm")
     public ResponseEntity<ResponseWrapperDto> saveTrainingRequestForm(@RequestBody TrfWithNominationDto trfNominationDto) {
+    	LOGGER.info("Saving training request form");
         return new ResponseEntity<>(traningRequestService.saveTrainingRequestForm(trfNominationDto), HttpStatus.OK);
     }
 
     @GetMapping("/getTrainingRequestForm")
     public List<TrainingRequestFormDto> getTrainingRequestForm(Principal principal) {
+    	LOGGER.info("Getting training request form");
         return traningRequestService.getTrainingRequestForm(principal);
     }
 
     //updateTrainingRequestForm
     @PutMapping("/updateTrainingRequestForm")
     public ResponseEntity<ResponseWrapperDto> approveTrainingRequestForm(@RequestBody TrainingRequestFormDto trainingRequestFormDto) {
-        return new ResponseEntity<>(traningRequestService.approveTrainingRequestForm(trainingRequestFormDto), HttpStatus.OK);
+    	LOGGER.info("Updating training request form");
+    	return new ResponseEntity<>(traningRequestService.approveTrainingRequestForm(trainingRequestFormDto), HttpStatus.OK);
     }
 
     @PutMapping("/decline-trf")
     public ResponseEntity<ResponseWrapperDto> declineTrainingRequestForm(@RequestBody TrainingRequestFormDto trainingRequestFormDto) {
-        return new ResponseEntity<>(traningRequestService.declineTrainingRequestForm(trainingRequestFormDto), HttpStatus.OK);
+    	LOGGER.info("Declining training request form");
+    	return new ResponseEntity<>(traningRequestService.declineTrainingRequestForm(trainingRequestFormDto), HttpStatus.OK);
     }
 
     @GetMapping("/getTrainingRequestFormById/{trainingID}")
     public TrainingRequestFormDto getTrainingRequestForm(@PathVariable long trainingID) {
-        return traningRequestService.getTrainingRequestFormById(trainingID);
+    	LOGGER.info("Getting training request form by Id");
+    	return traningRequestService.getTrainingRequestFormById(trainingID);
     }
 
     @PutMapping("/editTrainingRequestForm")
     public ResponseEntity<ResponseWrapperDto> editTrainingRequestForm(@RequestBody TrainingRequestFormDto trainingRequestFormDto) {
-        return new ResponseEntity<>(traningRequestService.editTrainingRequestForm(trainingRequestFormDto), HttpStatus.OK);
+    	LOGGER.info("Editing training request form");
+    	return new ResponseEntity<>(traningRequestService.editTrainingRequestForm(trainingRequestFormDto), HttpStatus.OK);
     }
 
     @PostMapping(value = "/upload", headers = ("content-type=multipart/*"), consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -82,14 +93,17 @@ public class TrainingRequestController {
                 traningRequestService.uploadFile(file);
 
                 message = "Uploaded the file successfully: " + file.getOriginalFilename();
+                LOGGER.info("Uploaded the file successfully: " + file.getOriginalFilename());
                 return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
             } catch (Exception e) {
                 message = "Could not upload the file: " + file.getOriginalFilename() + "!";
+                LOGGER.error("Could not upload the file: " + file.getOriginalFilename() + "!");
                 return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
             }
         }
 
         message = "Please upload an excel file!";
+        LOGGER.info("Please upload an excel file!");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(message));
     }
 
