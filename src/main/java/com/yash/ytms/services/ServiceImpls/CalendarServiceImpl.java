@@ -1,6 +1,9 @@
 package com.yash.ytms.services.ServiceImpls;
 
 import java.security.Principal;
+import java.time.DayOfWeek;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -85,19 +88,71 @@ public class CalendarServiceImpl implements ICalendarService {
 	@Override
 	public List<CalendarDto> getAllCalendarEvents() {
 		// TODO Auto-generated method stub
-		List<Calendar> calendarEvents = calendarRepository.findAll();
-		if (!calendarEvents.isEmpty()) {
+		List<Calendar> calendarEvents = expandCalendarsWithWeekdays(calendarRepository.findAll());
+			if (!calendarEvents.isEmpty()) {
 			return calendarEvents.stream().map(ce -> this.modelMapper.map(ce, CalendarDto.class)).toList();
 		} else
 			throw new ApplicationException("No Events found !");
 	}
 
+	
+
+	public static List<Calendar> expandCalendarsWithWeekdays(List<Calendar> calendars) {
+	    return calendars.stream()
+	            .flatMap(calendar -> {
+	                List<Calendar> expandedCalendars = new ArrayList<>();
+	                expandedCalendars.add(calendar);
+	                if (calendar.getNumber_of_week_days() > 0) {
+	                    expandedCalendars.addAll(expandWeekdays(calendar, calendar.getStart(), calendar.getEnd(), calendar.getNumber_of_week_days()));
+	                }
+	                return expandedCalendars.stream();
+	            })
+	            .collect(Collectors.toList());
+	}
+
+	private static List<Calendar> expandWeekdays(Calendar originalCalendar, ZonedDateTime currentDay, ZonedDateTime endDay, long remainingWeekdays) {
+	    if (remainingWeekdays == 0) {
+	        return List.of();
+	    }
+
+	    List<Calendar> expandedCalendars = new ArrayList<>();
+	    while (remainingWeekdays > 0) {
+	        currentDay = currentDay.plusDays(1);
+	        endDay = endDay.plusDays(1);
+	        if (isWeekday(currentDay)&&isWeekday(endDay)) {
+	            Calendar newCalendar = createCalendarFromOriginal(originalCalendar, currentDay, endDay);
+	            expandedCalendars.add(newCalendar);
+	            remainingWeekdays--;
+	        }
+	    }
+	    return expandedCalendars;
+	}
+
+	private static boolean isWeekday(ZonedDateTime day) {
+	    DayOfWeek dayOfWeek = day.getDayOfWeek();
+	    return dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY;
+	}
+
+	private static Calendar createCalendarFromOriginal(Calendar originalCalendar, ZonedDateTime start, ZonedDateTime end) {
+	    Calendar newCalendar = new Calendar();
+	    newCalendar.setId(originalCalendar.getId());
+	    newCalendar.setTitle(originalCalendar.getTitle());
+	    newCalendar.setStart(start);
+	    newCalendar.setEnd(end);
+	    newCalendar.setNumber_of_week_days(0L);
+	    newCalendar.setScheduleUser(originalCalendar.getScheduleUser());
+	    return newCalendar;
+	}
+
+	
+	
+	
 	@Override
 	public List<CalendarDto> searchByTrainer(String trainerEmail) {
 		// TODO Auto-generated method stub
 		if (StringUtils.isNotEmpty(trainerEmail)) {
 			ResponseWrapperDto responseWrapperDto = new ResponseWrapperDto();
-			List<Calendar> calendar = this.calendarRepository.findAllEventsByTrainerEmail(trainerEmail);
+			List<Calendar> calendar = expandCalendarsWithWeekdays(this.calendarRepository.findAllEventsByTrainerEmail(trainerEmail));
 			List<CalendarDto> calendarDto = calendar.stream().map(e -> this.modelMapper.map(e, CalendarDto.class)).toList();
 					
 			if (calendar.isEmpty()) {

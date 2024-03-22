@@ -43,25 +43,25 @@ public class ScheduleDeleteServiceImpl implements IScheduleDeleteService {
 	}
 
 	@Override
-	public ScheduleDeleteDto approve(ScheduleDeleteDto scheduleDeleteDto,Principal principal) {
+	public ScheduleDeleteDto approve(Long id,Principal principal) {
 		// TODO Auto-generated method stub
 		final String userName = principal.getName();
 		YtmsUserDto userDto = this.userService.getUserByEmailAdd(userName);
 		YtmsUser user = this.modelMapper.map(userDto, YtmsUser.class);
-		ScheduleDelete save = this.modelMapper.map(scheduleDeleteDto, ScheduleDelete.class);
-		save.setStatus(1);
-		save.setScheduleUser(user);
-		calendarService.deleteById(save.getCalendar().getId());
-		return this.modelMapper.map(deleteRepository.saveAndFlush(save), ScheduleDeleteDto.class);
+		ScheduleDelete delete = deleteRepository.getReferenceById(id);
+		delete.setStatus(1);
+		delete.setScheduleUser(user);
+		calendarService.deleteById(delete.getCalendar().getId());
+		return this.modelMapper.map(deleteRepository.saveAndFlush(delete), ScheduleDeleteDto.class);
 	}
 
 	@Override
-	public ScheduleDeleteDto deny(ScheduleDeleteDto scheduleDeleteDto,Principal principal) {
+	public ScheduleDeleteDto deny(Long id,Principal principal) {
 		// TODO Auto-generated method stub
 		final String userName = principal.getName();
 		YtmsUserDto userDto = this.userService.getUserByEmailAdd(userName);
 		YtmsUser user = this.modelMapper.map(userDto, YtmsUser.class);
-		ScheduleDelete save = this.modelMapper.map(scheduleDeleteDto, ScheduleDelete.class);
+		ScheduleDelete save = deleteRepository.getReferenceById(id);
 		save.setScheduleUser(user);
 		save.setStatus(2);
 		return this.modelMapper.map(deleteRepository.saveAndFlush(save), ScheduleDeleteDto.class);
@@ -70,7 +70,6 @@ public class ScheduleDeleteServiceImpl implements IScheduleDeleteService {
 	@Override
 	public List<ScheduleDeleteDto> getToApprove() {
 		// TODO Auto-generated method stub
-		
 	 List<ScheduleDelete> toDelete = deleteRepository.findByStatus(0);
 		return toDelete.stream().map(ce -> this.modelMapper.map(ce, ScheduleDeleteDto.class)).toList();
 	 	

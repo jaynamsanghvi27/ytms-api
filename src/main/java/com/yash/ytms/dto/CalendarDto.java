@@ -25,7 +25,7 @@ public class CalendarDto {
 	private LocalDate end_date;
 	private LocalTime start_time;
 	private LocalTime end_time;
-	
+	private Long number_of_week_days;
 
 
 }

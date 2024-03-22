@@ -43,6 +43,8 @@ public class Calendar {
 	@JoinColumn(name = "schedule_user")
 	private YtmsUser scheduleUser;
 
+	@Column
+	private Long number_of_week_days;
 	
 	@Transient
 	private LocalDate start_date;

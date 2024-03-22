@@ -8,7 +8,7 @@ import com.yash.ytms.dto.ScheduleDeleteDto;
 
 public interface IScheduleDeleteService {
 ScheduleDeleteDto save(CalendarDto calendarDto);
-ScheduleDeleteDto approve(ScheduleDeleteDto scheduleDeleteDto,Principal principal);
-ScheduleDeleteDto deny(ScheduleDeleteDto scheduleDeleteDto,Principal principal);
+ScheduleDeleteDto approve(Long id,Principal principal);
+ScheduleDeleteDto deny(Long id,Principal principal);
 List<ScheduleDeleteDto> getToApprove();
 }

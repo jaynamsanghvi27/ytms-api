@@ -11,11 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yash.ytms.dto.CalendarDto;
-import com.yash.ytms.dto.ResponseWrapperDto;
 import com.yash.ytms.dto.ScheduleDeleteDto;
 import com.yash.ytms.services.IServices.ICalendarService;
 import com.yash.ytms.services.IServices.IScheduleDeleteService;
@@ -46,10 +44,13 @@ public class CalendarController {
 	}
 
 	@PostMapping("/save")
-	public ResponseEntity<List<CalendarDto>> saveEvents(@RequestBody List<CalendarDto> calendarDtos,
-			Principal principal) {
-		return new ResponseEntity<>(iCalendarService.createCalendarEvents(calendarDtos, principal), HttpStatus.OK);
+	public ResponseEntity<CalendarDto> saveEvent(@RequestBody CalendarDto calendarDto, Principal principal) {
+		return new ResponseEntity<>(iCalendarService.updateCalendarEvent(calendarDto, principal), HttpStatus.OK);
 	}
+//	public ResponseEntity<List<CalendarDto>> saveEvents(@RequestBody List<CalendarDto> calendarDtos,
+//			Principal principal) {
+//		return new ResponseEntity<>(iCalendarService.createCalendarEvents(calendarDtos, principal), HttpStatus.OK);
+//	}
 
 	@PostMapping("/update")
 	public ResponseEntity<CalendarDto> updateEvent(@RequestBody CalendarDto calendarDto, Principal principal) {
