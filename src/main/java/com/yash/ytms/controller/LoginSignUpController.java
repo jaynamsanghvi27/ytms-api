@@ -5,6 +5,9 @@ import com.yash.ytms.security.jwt.JwtAuthRequest;
 import com.yash.ytms.security.jwt.JwtAuthResponse;
 import com.yash.ytms.services.IServices.IAuthService;
 import com.yash.ytms.services.IServices.IYtmsUserService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,11 +37,14 @@ public class LoginSignUpController {
     @Autowired
     private IYtmsUserService ytmsUserService;
 
+    final Logger LOGGER = LoggerFactory.getLogger(LoginSignUpController.class);
+    
     @PostMapping("/login")
     public ResponseEntity<JwtAuthResponse> login(@RequestBody JwtAuthRequest authRequest) {
         JwtAuthResponse authResponse = this
                 .authService
                 .login(authRequest);
+        LOGGER.info("Login user"+authResponse);
         return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 
@@ -47,6 +53,7 @@ public class LoginSignUpController {
         YtmsUserDto newUser = this
                 .userService
                 .createNewUser(userDto);
+        LOGGER.info("registering new user"+newUser);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
@@ -55,6 +62,7 @@ public class LoginSignUpController {
         YtmsUserDto user = this
                 .ytmsUserService
                 .getUserByEmailAdd(email);
+        LOGGER.info("Getting user by email"+user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }
