@@ -124,6 +124,8 @@ public class TrainingRequestForm {
 	private String userName;
 	
 	private int noOfParticipant;
+	
+	private String trainer;
 
 	//to be used only in case of request declined
 	private String declinedMessage;
