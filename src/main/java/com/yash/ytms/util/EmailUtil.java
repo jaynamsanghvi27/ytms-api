@@ -15,11 +15,15 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
+import com.yash.ytms.domain.YtmsUser;
+import com.yash.ytms.repository.YtmsUserRepository;
+
 import java.io.File;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 /**
  * Project Name - ytms-api
@@ -34,6 +38,9 @@ public class EmailUtil {
 
     @Autowired
     private JavaMailSender javaMailSender;
+    
+    @Autowired
+    YtmsUserRepository userRepository;
 
     @Value("${spring.mail.username}")
     private String mailUsername;
@@ -129,4 +136,26 @@ public class EmailUtil {
         javaMailSender.send(mimeMessage);
     }
 
+    public void sendMailToTechnicalManager(List<String> usersList) throws MessagingException {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+        String[] to =  createStringArray(usersList);
+        mimeMessageHelper.setTo(to);
+        mimeMessageHelper.setSubject("Notification Mail");
+        List<YtmsUser> pendingUsers = userRepository.getAllPendingUsers();
+        
+        String emailText = "The following users have submitted a request:\n\n" +
+                pendingUsers.stream()
+                            .map(YtmsUser::getFullName)
+                            .collect(Collectors.joining("\n")) +
+                "\n\nIf you want to Approve/Reject, please go to the dashboard and take action.";
+        
+        mimeMessageHelper.setText(emailText.toString());
+             
+        System.out.println("==============="+emailText+"================");
+        
+        javaMailSender.send(mimeMessage);
+    }
+    
+    
 }

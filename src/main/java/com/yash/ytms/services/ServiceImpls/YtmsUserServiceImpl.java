@@ -55,6 +55,9 @@ public class YtmsUserServiceImpl implements IYtmsUserService {
 
     @Override
     public YtmsUserDto createNewUser(YtmsUserDto userDto) {
+    	
+    	ResponseWrapperDto responseWrapperDto = new ResponseWrapperDto();
+    	
         YtmsUser user = null;
         if (ObjectUtils.isNotEmpty(userDto)) {
 
@@ -88,6 +91,16 @@ public class YtmsUserServiceImpl implements IYtmsUserService {
                     userDto = this
                             .modelMapper
                             .map(user, YtmsUserDto.class);
+                    
+                    List<String> usersList = userRepository.findAllTechnicalManager();
+                    if (ObjectUtils.isNotEmpty(usersList)) {
+                        try {
+                            emailUtil.sendMailToTechnicalManager(usersList);
+                        } catch (MessagingException ex) {
+                            responseWrapperDto.setMessage("unable send mail to technical manager ! " + ex.getMessage());
+                        }
+                    }
+                    
                 } else {
                     throw new ApplicationException("Password did not matched, please try again");
                 }
