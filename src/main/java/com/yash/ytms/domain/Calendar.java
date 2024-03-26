@@ -35,9 +35,9 @@ public class Calendar {
 	@Column
 	private String title;
     @Column
-	private ZonedDateTime start;
+	private LocalDateTime start;
     @Column
-	private ZonedDateTime end;
+	private LocalDateTime end;
 
 	@ManyToOne
 	@JoinColumn(name = "schedule_user")
@@ -60,13 +60,11 @@ public class Calendar {
 
 	
 	public void setStart() {
-		LocalDateTime localDateTime = start_date.atTime(start_time);
-		this.start = localDateTime.atZone(zoneId);
+		this.start = start_date.atTime(start_time);
 	}
 
 	public void setEnd() {
-		LocalDateTime localDateTime = end_date.atTime(end_time);
-		this.end = localDateTime.atZone(zoneId);
+		this.end =end_date.atTime(end_time);
 	}
 
 }

@@ -1,9 +1,6 @@
 package com.yash.ytms.domain;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZonedDateTime;
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,7 +23,7 @@ public class ScheduleDelete {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.REMOVE,optional = true)
 	@JoinColumn(name = "schedule")
     private Calendar calendar;
 	@ManyToOne
