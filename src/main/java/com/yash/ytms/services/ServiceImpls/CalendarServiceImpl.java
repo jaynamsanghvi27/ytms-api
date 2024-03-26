@@ -2,7 +2,7 @@ package com.yash.ytms.services.ServiceImpls;
 
 import java.security.Principal;
 import java.time.DayOfWeek;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -94,9 +94,7 @@ public class CalendarServiceImpl implements ICalendarService {
 		} else
 			throw new ApplicationException("No Events found !");
 	}
-
 	
-
 	public static List<Calendar> expandCalendarsWithWeekdays(List<Calendar> calendars) {
 	    return calendars.stream()
 	            .flatMap(calendar -> {
@@ -110,13 +108,13 @@ public class CalendarServiceImpl implements ICalendarService {
 	            .collect(Collectors.toList());
 	}
 
-	private static List<Calendar> expandWeekdays(Calendar originalCalendar, ZonedDateTime currentDay, ZonedDateTime endDay, long remainingWeekdays) {
-	    if (remainingWeekdays == 0) {
+	private static List<Calendar> expandWeekdays(Calendar originalCalendar, LocalDateTime currentDay, LocalDateTime endDay, long remainingWeekdays) {
+	    if (remainingWeekdays == 1) {
 	        return List.of();
 	    }
 
 	    List<Calendar> expandedCalendars = new ArrayList<>();
-	    while (remainingWeekdays > 0) {
+	    while (remainingWeekdays > 1) {
 	        currentDay = currentDay.plusDays(1);
 	        endDay = endDay.plusDays(1);
 	        if (isWeekday(currentDay)&&isWeekday(endDay)) {
@@ -128,12 +126,11 @@ public class CalendarServiceImpl implements ICalendarService {
 	    return expandedCalendars;
 	}
 
-	private static boolean isWeekday(ZonedDateTime day) {
+	private static boolean isWeekday(LocalDateTime day) {
 	    DayOfWeek dayOfWeek = day.getDayOfWeek();
 	    return dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY;
 	}
-
-	private static Calendar createCalendarFromOriginal(Calendar originalCalendar, ZonedDateTime start, ZonedDateTime end) {
+	private static Calendar createCalendarFromOriginal(Calendar originalCalendar, LocalDateTime start, LocalDateTime end) {
 	    Calendar newCalendar = new Calendar();
 	    newCalendar.setId(originalCalendar.getId());
 	    newCalendar.setTitle(originalCalendar.getTitle());
@@ -143,8 +140,7 @@ public class CalendarServiceImpl implements ICalendarService {
 	    newCalendar.setScheduleUser(originalCalendar.getScheduleUser());
 	    return newCalendar;
 	}
-
-	
+			
 	
 	
 	@Override
