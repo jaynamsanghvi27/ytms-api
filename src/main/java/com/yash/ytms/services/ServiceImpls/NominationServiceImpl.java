@@ -56,13 +56,11 @@ public class NominationServiceImpl implements INominationService {
 				break;
 			}
 
-			// Nomination nomination = setNominationObject(row);
-
-			NominationDto nominationData = setNominationObject(row);
-
-			// nominationUploadRepository.save(nomination);
-
-			nominationUploadDataList.add(nominationData);
+			if(row.getCell(0) != null && row.getCell(0).toString() != "0" && row.getCell(0).toString().trim() != "") {
+				NominationDto nominationData = setNominationObject(row);
+	
+				nominationUploadDataList.add(nominationData);
+			}
 
 		}
 
