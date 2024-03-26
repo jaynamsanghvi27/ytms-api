@@ -3,6 +3,9 @@ package com.yash.ytms.controller;
 import com.yash.ytms.dto.ResponseWrapperDto;
 import com.yash.ytms.dto.ScheduleEventDto;
 import com.yash.ytms.services.IServices.IScheduleEventService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +29,12 @@ public class ScheduleEventController {
     @Autowired
     private IScheduleEventService scheduleEventService;
 
+    final Logger LOGGER = LoggerFactory.getLogger(ScheduleEventController.class);
+    
     @GetMapping("/get/all")
     public ResponseEntity<List<ScheduleEventDto>> getAllScheduleEvents() {
         List<ScheduleEventDto> scheduleEvents = this.scheduleEventService.getAllScheduleEvents();
+        LOGGER.info("Getting all scheduled events");
         return new ResponseEntity<>(scheduleEvents, HttpStatus.OK);
     }
 
@@ -37,12 +43,14 @@ public class ScheduleEventController {
             @RequestParam("date") String date,
             Principal principal) {
         List<ScheduleEventDto> scheduleEvents = this.scheduleEventService.getAllEventsForUser(principal, date);
+        LOGGER.info("Getting user scheduled events");
         return new ResponseEntity<>(scheduleEvents, HttpStatus.OK);
     }
 
     @GetMapping("/get/{eventId}")
     public ResponseEntity<ScheduleEventDto> getScheduleEventById(@PathVariable Integer eventId) {
         ScheduleEventDto scheduleEvent = this.scheduleEventService.getScheduleEventById(eventId);
+        LOGGER.info("Getting scheduled event by Id");
         return new ResponseEntity<>(scheduleEvent, HttpStatus.OK);
     }
 
@@ -50,6 +58,7 @@ public class ScheduleEventController {
     public ResponseEntity<ScheduleEventDto> createScheduleEvent(@RequestBody ScheduleEventDto scheduleEventDto,
                                                                 Principal principal) {
         ScheduleEventDto scheduleEvent = this.scheduleEventService.createScheduleEvent(scheduleEventDto, principal);
+        LOGGER.info("Creating event");
         return new ResponseEntity<>(scheduleEvent, HttpStatus.CREATED);
     }
 
@@ -57,6 +66,7 @@ public class ScheduleEventController {
     public ResponseEntity<ResponseWrapperDto> deleteScheduleEventById(@PathVariable Integer eventId,
                                                                       Principal principal) {
         ResponseWrapperDto responseWrapperDto = this.scheduleEventService.deleteScheduleEventById(eventId, principal);
+        LOGGER.info("Deleting scheduled event");
         return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK);
     }
 
@@ -65,6 +75,7 @@ public class ScheduleEventController {
                                                                   @RequestBody ScheduleEventDto scheduleEventDto,
                                                                   Principal principal) {
         ResponseWrapperDto responseWrapperDto = this.scheduleEventService.updateScheduleEvent(eventId, scheduleEventDto, principal);
+        LOGGER.info("Updating scheduled event");
         return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK);
     }
 
@@ -72,6 +83,7 @@ public class ScheduleEventController {
     public ResponseEntity<ResponseWrapperDto> searchByTrainerEmail(@RequestParam("email") String trainerEmail) {
 
         ResponseWrapperDto events = scheduleEventService.searchByTrainer(trainerEmail);
+        LOGGER.info("Searching events by trainer");
         return new ResponseEntity<>(events, HttpStatus.OK);
     }
 }

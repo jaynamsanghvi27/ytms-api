@@ -2,6 +2,8 @@ package com.yash.ytms.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +27,8 @@ public class NominationBulkUploadController {
 	@Autowired
 	private INominationService iNominationUploadService;
 	
+	final Logger LOGGER = LoggerFactory.getLogger(NominationBulkUploadController.class);
+	
 	 @PostMapping("/register/readExcel")
 	    public List<NominationDto> bulkUpload(@RequestParam("file") MultipartFile file) {
 		List<NominationDto> nominationUploadDataList =null;
@@ -32,9 +36,11 @@ public class NominationBulkUploadController {
 		try {
             nominationUploadDataList = iNominationUploadService.parseExcel(file);
             nominationUploadDataList.stream().forEach(System.out::println);
+            LOGGER.info("uploading file");
             return nominationUploadDataList ;
         } catch (Exception e) {
         	e.printStackTrace();
+        	LOGGER.error("Error i uploading file"+e);
             return nominationUploadDataList; 
         }
 	 }
@@ -42,27 +48,32 @@ public class NominationBulkUploadController {
 	 
 	 @PostMapping("/register/saveNomination")
 	 public NominationDto saveNomination(@RequestBody NominationDto dto) {
+		 LOGGER.info("Saving nomination");
 		 return iNominationUploadService.saveNomination(dto);
 	 }
 	 
 	 
 	 @GetMapping("/register/getNominationListByTrainingId/{trainingId}")
 	 public List<NominationDto> getNominationListByTrainingId(@PathVariable Long trainingId){
+		 LOGGER.info("Getting nomination by training Id");
 		 return iNominationUploadService.findNominationsByTrainingID(trainingId); 
 	 }
 	 
 	 @GetMapping("/register/getNominationById/{nominationId}")
 	 public NominationDto getNominationById(@PathVariable Long nominationId){
+		 LOGGER.info("Getting nomination by nomination Id");
 		 return iNominationUploadService.getNomiationById(nominationId);
 	 }
 	 
 	 @PutMapping("/register/update-nomination")
 	 public NominationDto updateNominationById(@RequestBody NominationDto dto) {
+		 LOGGER.info("Updating nomination Id");
 		 return iNominationUploadService.saveNomination(dto);
 	 }
 	 
 	 @DeleteMapping("/register/deleteNominationById/{nominationId}")
 	    public void deleteTraining(@PathVariable long nominationId) {
+		 LOGGER.info("Deleting nomination Id");
 	        iNominationUploadService.deleteNominationById(nominationId);
 	        return;
 	 }
