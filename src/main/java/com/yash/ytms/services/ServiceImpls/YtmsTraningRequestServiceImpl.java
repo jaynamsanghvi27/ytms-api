@@ -122,7 +122,7 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
                         if (ObjectUtils.isNotEmpty(trainingRequestForm)) {
                             requestRepository.save(trainingRequestForm);
                             responseWrapperDto.setMessage("Data Save Successfully..");
-                            emailUtil.sendNotificationMailForRequestApproved(trainingRequestForm.getUserName(), formDto.getFileName());
+                            emailUtil.sendNotificationMailForRequestApproved(trainingRequestForm.getUserName(), formDto.getFileName(),oldformDto);
                         } else {
                             responseWrapperDto.setMessage("transection fail !");
                         }
@@ -157,7 +157,7 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
                     if (ObjectUtils.isNotEmpty(trainingRequestForm)) {
                         requestRepository.save(trainingRequestForm);
                         responseWrapperDto.setMessage("Data Save Successfully..");
-                        emailUtil.sendNotificationMailForRequestReject(trainingRequestForm.getUserName());
+                        emailUtil.sendNotificationMailForRequestReject(trainingRequestForm.getUserName(),trainingRequestForm);
                     } else {
                         responseWrapperDto.setMessage("transection fail !");
                     }

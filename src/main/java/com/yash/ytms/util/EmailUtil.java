@@ -1,29 +1,36 @@
 package com.yash.ytms.util;
 
-import jakarta.activation.DataHandler;
-import jakarta.activation.DataSource;
-import jakarta.activation.FileDataSource;
-import jakarta.mail.*;
-import jakarta.mail.internet.InternetAddress;
-import jakarta.mail.internet.MimeBodyPart;
-import jakarta.mail.internet.MimeMessage;
-import jakarta.mail.internet.MimeMultipart;
+import java.io.File;
+import java.util.Base64;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
+import com.yash.ytms.domain.TrainingRequestForm;
 import com.yash.ytms.domain.YtmsUser;
 import com.yash.ytms.repository.YtmsUserRepository;
 
-import java.io.File;
-import java.util.Base64;
-import java.util.List;
-import java.util.Objects;
-import java.util.Properties;
-import java.util.stream.Collectors;
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
+import jakarta.activation.FileDataSource;
+import jakarta.mail.Authenticator;
+import jakarta.mail.BodyPart;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Multipart;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
 
 /**
  * Project Name - ytms-api
@@ -71,9 +78,10 @@ public class EmailUtil {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
         String[] to =  createStringArray(usersList);
+        YtmsUser user=userRepository.getById(email);
         mimeMessageHelper.setTo(to);
-        mimeMessageHelper.setSubject("Notification Mail");
-        mimeMessageHelper.setText(email+" has been submitted a request, if you want to Approved/Reject, " + "Please go to dashboard and take action ");
+        mimeMessageHelper.setSubject("New Training Request Notification");
+        mimeMessageHelper.setText(user.getFullName()+" has been submitted a request, if you want to Approved/Reject, " + "Please go to dashboard and take action ");
 
         javaMailSender.send(mimeMessage);
     }
@@ -87,7 +95,7 @@ public class EmailUtil {
         return  emailIds;
     }
 
-    public void sendNotificationMailForRequestApproved(String email, String fileName) throws MessagingException {
+    public void sendNotificationMailForRequestApproved(String email, String fileName, TrainingRequestForm formDto) throws MessagingException {
         Session session = javaMailSender.createMimeMessage().getSession();
         session = Session.getInstance(session.getProperties(), new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -97,10 +105,12 @@ public class EmailUtil {
         try {
             Message message = new MimeMessage(session);
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
-            message.setSubject("Notification Mail ");
+            message.setSubject("Notification for Training Approval");
+//            message.setContent(email + " your request has been Approved.<br><br>"+approveMailBody(formDto),"text/html");
             // Create the email body
+            YtmsUser user=userRepository.getById(email);
             BodyPart messageBodyPart = new MimeBodyPart();
-            messageBodyPart.setText(email + " your request has been Approved");
+            messageBodyPart.setContent("Hi "+user.getFullName() + "<br> your request has been Approved.<br> Please find below training details and attachment for the training plan"+approveMailBody(formDto)+"<br><br> Thanks & Regards<br> YTMS Team","text/html; charset=utf-8");
             // Attach the file
             File f = new File(filePath+fileName+fileExt);
 
@@ -125,13 +135,50 @@ public class EmailUtil {
             System.out.println("Error   " + ex.getMessage());
         }
     }
+    
+    public String approveMailBody(TrainingRequestForm formDto) {
+    	StringBuilder tableBuilder = new StringBuilder();
+    	tableBuilder.append("<table border='1'>");
+    	tableBuilder.append("<tr>");
+    	 
+    	// Add table headers
+	    	tableBuilder.append("<th>").append("Training Name").append("</th>");
+	    	tableBuilder.append("<td>").append(formDto.getTrainingName()).append("</td>");
+    	tableBuilder.append("</tr>");
+    	tableBuilder.append("<tr>");
+	    	tableBuilder.append("<th>").append("Start Date").append("</th>");
+	    	tableBuilder.append("<td>").append(formDto.getActualStartDate()).append("</td>");
+    	tableBuilder.append("</tr>");
+    	tableBuilder.append("<tr>");
+	    	tableBuilder.append("<th>").append("End Date").append("</th>");
+	    	tableBuilder.append("<td>").append(formDto.getActualEndDate().toString()).append("</td>");
+    	tableBuilder.append("<tr>");
+    	tableBuilder.append("</tr>");
+	    	tableBuilder.append("<th>").append("Trainer Name").append("</th>");
+	    	tableBuilder.append("<td>").append(formDto.getTrainer()).append("</td>");
+    	 
+    	tableBuilder.append("</tr>");
+    	 
+    	// Add table rows with data
+    	
+//    	  tableBuilder.append("<tr>");
+//    	    tableBuilder.append("<td>").append(formDto.getTrainingName()).append("</td>");
+//    	    tableBuilder.append("<td>").append(formDto.getActualStartDate()).append("</td>");
+//    	    tableBuilder.append("<td>").append(formDto.getActualEndDate()).append("</td>");
+//    	    tableBuilder.append("<td>").append(formDto.getTrainer()).append("</td>");
+//    	  tableBuilder.append("</tr>");
+    	
+    	 
+    	tableBuilder.append("</table>");
+    	return tableBuilder.toString();
+	}
 
-    public void sendNotificationMailForRequestReject(String email) throws MessagingException {
+    public void sendNotificationMailForRequestReject(String email,TrainingRequestForm formDto) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
         mimeMessageHelper.setTo(email);
-        mimeMessageHelper.setSubject("Notification Mail");
-        mimeMessageHelper.setText(email + " request has been Rejected");
+        mimeMessageHelper.setSubject("Notification for Training Rejection");
+        mimeMessageHelper.setText(email + " request has been Rejected due to below reason.\n"+formDto.getDeclinedMessage());
 
         javaMailSender.send(mimeMessage);
     }
@@ -141,7 +188,7 @@ public class EmailUtil {
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
         String[] to =  createStringArray(usersList);
         mimeMessageHelper.setTo(to);
-        mimeMessageHelper.setSubject("Notification Mail");
+        mimeMessageHelper.setSubject("New User Request Notification");
         List<YtmsUser> pendingUsers = userRepository.getAllPendingUsers();
         
         String emailText = "The following users have submitted a request:\n\n" +
