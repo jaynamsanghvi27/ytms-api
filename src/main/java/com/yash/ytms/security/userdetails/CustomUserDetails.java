@@ -1,14 +1,16 @@
 package com.yash.ytms.security.userdetails;
 
-import com.yash.ytms.constants.UserAccountStatusTypes;
-import com.yash.ytms.domain.YtmsUser;
-import lombok.Data;
+import java.util.Collection;
+import java.util.Collections;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Collections;
+import com.yash.ytms.constants.UserAccountStatusTypes;
+import com.yash.ytms.domain.YtmsUser;
+
+import lombok.Data;
 
 /**
  * Project Name - ytms-api

@@ -48,4 +48,6 @@ public class TrainingRequestFormDto {
 	private int noOfActualParticipant;
 
 	private String trainingStatus;
+
+	private String trainer;
 }

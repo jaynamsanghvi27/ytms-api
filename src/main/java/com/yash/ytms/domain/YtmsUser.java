@@ -51,4 +51,7 @@ public class YtmsUser {
     @ManyToOne
     @JoinColumn(name = "user_role")
     private UserRole userRole;
+
+
+
 }

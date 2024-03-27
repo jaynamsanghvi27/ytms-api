@@ -100,6 +100,8 @@ public class SecurityConfig {
                             .requestMatchers("/register/**").permitAll()
                             .requestMatchers("/ytmscli/**").permitAll()
                             .requestMatchers("/login/**").permitAll()
+                            .requestMatchers("/calendar/**").permitAll()
+                            .requestMatchers("/delete/**").permitAll()
                             .requestMatchers("/users/forgotPassword").permitAll()
                             .requestMatchers("/users/resetPassword").permitAll()
                             .anyRequest().authenticated();

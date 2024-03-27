@@ -5,6 +5,8 @@ package com.yash.ytms.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +27,17 @@ public class UnitMasterController {
 	@Autowired
 	IUnitMasterService unitMasterService;
 	
+	final Logger LOGGER = LoggerFactory.getLogger(UnitMasterController.class);
+	
 	@GetMapping("/getUnitMasterList")
 	public List<UnitMasterDto> getUnitMasterList(){
+		LOGGER.info("Getting unit list");
 		return unitMasterService.getUnitMasterList();
 	}
 	
 	@PostMapping("/add-unit")
 	public ResponseEntity<ResponseWrapperDto> saveUnit(@RequestBody UnitMasterDto dto) {
+		LOGGER.info("Adding unit ");
         return new ResponseEntity<>(unitMasterService.saveUnit(dto), HttpStatus.OK);
     }
 }

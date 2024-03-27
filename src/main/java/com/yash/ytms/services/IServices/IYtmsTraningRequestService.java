@@ -1,14 +1,13 @@
 package com.yash.ytms.services.IServices;
 
-import java.io.File;
 import java.security.Principal;
 import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.yash.ytms.dto.ResponseWrapperDto;
 import com.yash.ytms.dto.TrainingRequestFormDto;
 import com.yash.ytms.dto.TrfWithNominationDto;
-import jakarta.mail.Multipart;
-import org.springframework.web.multipart.MultipartFile;
 
 public interface IYtmsTraningRequestService {
 
