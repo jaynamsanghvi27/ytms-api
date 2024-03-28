@@ -123,7 +123,7 @@ public class TrainingRequestForm {
 
 	private String userName;
 
-	@Column(columnDefinition="String default 'Planned'")
+	@Column(columnDefinition="varchar(255) default 'Planned'")
 	private String trainingStatus;
 
 	

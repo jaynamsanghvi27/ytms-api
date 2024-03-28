@@ -185,17 +185,18 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
         try {
             if (UserRoleTypes.ROLE_TECHNICAL_MANAGER.toString().equals(role)) {
                 forms = requestRepository.findAll();
-            } else {
-                forms = requestRepository.findByUserName(userName);
             }
-            System.out.println(forms);
-            requestFormList = modelMapper.map(forms, List.class);
-        } catch (Exception e) {
-            // TODO: handle exception
-            e.printStackTrace();
+            else{
+                    forms = requestRepository.findByUserName(userName);
+                }
+                System.out.println(forms);
+                requestFormList = modelMapper.map(forms, List.class);
+            } catch(Exception e){
+                // TODO: handle exception
+                e.printStackTrace();
+            }
+            return requestFormList;
         }
-        return requestFormList;
-    }
 
     @Override
     public TrainingRequestFormDto getTrainingRequestFormById(long trainingId) {
@@ -282,5 +283,27 @@ public class YtmsTraningRequestServiceImpl implements IYtmsTraningRequestService
 
     public List<String> getFileName() {
         return storeFileNameInRepository.findAllFileName();
+    }
+
+    @Override
+    public List<TrainingRequestFormDto> getTrainerTrainingList(Principal principal) {
+        List<TrainingRequestFormDto> requestFormList = null;
+        List<TrainingRequestForm> forms = new ArrayList<TrainingRequestForm>();
+        String userName = principal.getName();
+        CustomUserDetails customUserDetails = this.userDetails.loadUserByUsername(userName);
+        String role = customUserDetails.getGrantedAuthorities().getAuthority();
+        try {
+            if (UserRoleTypes.ROLE_TRAINER.toString().equals(role)) {
+                String trainerName = requestRepository.findTrainerName(userName);
+                forms = requestRepository.findByTrainer(trainerName);
+            } else {
+                forms = requestRepository.findByUserName(userName);
+            }
+            requestFormList = modelMapper.map(forms, List.class);
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return requestFormList;
     }
 }

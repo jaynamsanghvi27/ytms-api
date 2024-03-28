@@ -129,4 +129,10 @@ public class TrainingRequestController {
     public List<YtmsUserDto> getRequesterList() {
         return userService.findByUserRoleId(501L);
     }
+
+    @GetMapping("/getTrainerTrainingList")
+    public List<TrainingRequestFormDto> getTrainerTrainingList(Principal principal) {
+        LOGGER.info("Getting training request form");
+        return traningRequestService.getTrainerTrainingList(principal);
+    }
 }
